@@ -2,11 +2,14 @@
 
 /* Hero Bölümü */
 .competitions-hero {
-    background: linear-gradient(135deg, #4a00e0, #8e2de2);
-    color: white;
-    padding: 100px 0 50px;
+    background: linear-gradient(135deg, #0045ab 0%, #6610f2 100%);
+    color: #fff;
+    padding: 15rem 0;
     position: relative;
     overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
 }
 
 .competitions-hero::before {

@@ -86,14 +86,6 @@ tugeto/
 └── requirements.txt        # Bağımlılıklar
 ```
 
-## 📸 Ekran Görüntüleri
-
-<div align="center">
-  <img src="screenshots/anasayfa.png" alt="Ana Sayfa" width="400">
-  <img src="screenshots/forum.png" alt="Forum" width="400">
-  <img src="screenshots/yarisma.png" alt="Yarışmalar" width="400">
-  <img src="screenshots/profil.png" alt="Profil" width="400">
-</div>
 
 ## 🤝 Katkıda Bulunma
 
@@ -103,18 +95,6 @@ tugeto/
 4. Branch'inize push edin (`git push origin feature/amazing-feature`)
 5. Pull Request oluşturun
 
-## 📄 Lisans
-
-Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
-
-## 📞 İletişim
-
-- **E-posta**: info@tugeto.com
-- **Web**: [www.tugeto.com](https://www.tugeto.com)
-- **GitHub**: [github.com/tugeto](https://github.com/tugeto)
-
----
-
 <div align="center">
-  <p>❤️ ile Türkiye'de geliştirilmiştir</p>
+  <p>Türkiye'de geliştirilmiştir</p>
 </div>

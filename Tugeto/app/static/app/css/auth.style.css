@@ -2,11 +2,14 @@
 
 /* Hero Bölümü */
 .auth-hero {
-    background: linear-gradient(135deg, #4a00e0, #8e2de2);
-    color: white;
-    padding: 100px 0 50px;
+    background: linear-gradient(135deg, #0045ab 0%, #6610f2 100%);
+    color: #fff;
+    padding: 20rem 0;
     position: relative;
     overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
 }
 
 .auth-hero::before {
@@ -16,7 +19,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://img.freepik.com/free-photo/programming-background-with-person-working-with-codes-computer_23-2150010125.jpg');
+    background-image: url('../assets/pattern.png');
     background-size: cover;
     opacity: 0.1;
     z-index: 0;
@@ -33,10 +36,11 @@
 
 .auth-hero-wave {
     position: absolute;
-    bottom: -10px;
+    bottom: 0;
     left: 0;
     width: 100%;
     line-height: 0;
+    z-index: 2;
 }
 
 /* Auth Container */
@@ -49,15 +53,16 @@
 
 /* Auth Card */
 .auth-card {
-    border-radius: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    background-color: white;
 }
 
 .auth-card:hover {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
 }
 
 .auth-card .card-body {
@@ -88,38 +93,37 @@
 
 /* Form Elements */
 .form-floating {
+    position: relative;
     margin-bottom: 20px;
 }
 
-.form-floating .form-control {
+.form-control {
     border-radius: 10px;
-    border: 1px solid #e0e0e0;
     padding: 12px 20px;
-    height: calc(3.5rem + 2px);
-    font-size: 1rem;
+    border: 1px solid #e0e0e0;
     transition: all 0.3s ease;
 }
 
-.form-floating .form-control:focus {
-    box-shadow: 0 0 0 0.25rem rgba(74, 0, 224, 0.25);
-    border-color: #4a00e0;
+.form-control:focus {
+    border-color: #8e2de2;
+    box-shadow: 0 0 0 0.25rem rgba(142, 45, 226, 0.25);
 }
 
-.form-floating label {
-    padding: 1rem 1.25rem;
+.form-floating > .form-control {
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
 }
 
 .password-toggle {
     position: absolute;
-    right: 10px;
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     color: #6c757d;
+    cursor: pointer;
     z-index: 10;
-    padding: 0;
-    transition: all 0.3s ease;
 }
 
 .password-toggle:hover {
@@ -128,100 +132,54 @@
 
 /* User Type Selection */
 .user-type-container {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
-.user-type-radio {
-    position: relative;
-    padding: 0;
-    margin-right: 15px;
-}
-
-.user-type-radio input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    z-index: 2;
-}
-
-.user-type-radio label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100px;
-    height: 100px;
-    border-radius: 15px;
-    background-color: #f8f9fa;
-    border: 2px solid #e0e0e0;
-    padding: 15px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.user-type-radio label i {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    color: #6c757d;
-    transition: all 0.3s ease;
-}
-
-.user-type-radio input[type="radio"]:checked + label {
+.btn-check:checked + .btn-outline-primary {
+    background-color: #4a00e0;
     border-color: #4a00e0;
-    background-color: rgba(74, 0, 224, 0.05);
+    color: white;
 }
 
-.user-type-radio input[type="radio"]:checked + label i {
+.btn-outline-primary {
+    border-color: #e0e0e0;
+    color: #333;
+}
+
+.btn-outline-primary:hover {
+    background-color: #f8f9fa;
+    border-color: #4a00e0;
     color: #4a00e0;
 }
 
-/* Submit Button */
+/* Auth Button */
 .btn-auth {
     border-radius: 10px;
     padding: 12px 20px;
-    font-weight: 500;
+    font-weight: 600;
     transition: all 0.3s ease;
+}
+
+.btn-auth.btn-primary {
     background: linear-gradient(135deg, #4a00e0, #8e2de2);
     border: none;
 }
 
-.btn-auth:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(74, 0, 224, 0.3);
+.btn-auth.btn-primary:hover {
+    background: linear-gradient(135deg, #3a00b0, #7e1dd2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(142, 45, 226, 0.4);
 }
 
-/* Terms Checkbox */
-.form-check-input {
-    width: 1.2em;
-    height: 1.2em;
-    margin-top: 0.15em;
-    border-radius: 0.25em;
-    border: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
-}
-
-.form-check-input:checked {
-    background-color: #4a00e0;
-    border-color: #4a00e0;
-}
-
-.form-check-input:focus {
-    box-shadow: 0 0 0 0.25rem rgba(74, 0, 224, 0.25);
-    border-color: #4a00e0;
-}
-
-/* Links */
+/* Auth Links */
 .auth-links {
-    margin-top: 20px;
     text-align: center;
+    margin-top: 20px;
 }
 
 .auth-links a {
     color: #4a00e0;
     text-decoration: none;
-    font-weight: 500;
     transition: all 0.3s ease;
 }
 
@@ -233,49 +191,56 @@
 /* Social Login */
 .social-login {
     margin-top: 30px;
-    text-align: center;
 }
 
 .social-login-divider {
-    display: flex;
-    align-items: center;
+    position: relative;
+    text-align: center;
     margin: 20px 0;
 }
 
-.social-login-divider::before,
-.social-login-divider::after {
+.social-login-divider::before {
     content: '';
-    flex: 1;
-    border-bottom: 1px solid #e0e0e0;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e0e0e0;
+    z-index: 1;
 }
 
 .social-login-divider span {
-    padding: 0 10px;
+    position: relative;
+    background-color: white;
+    padding: 0 15px;
     color: #6c757d;
-    font-size: 0.9rem;
+    font-size: 14px;
+    z-index: 2;
 }
 
 .social-login-buttons {
     display: flex;
     justify-content: center;
     gap: 15px;
+    margin-top: 20px;
 }
 
 .btn-social {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     color: white;
+    font-size: 20px;
+    transition: all 0.3s ease;
 }
 
 .btn-social:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-google {
@@ -290,19 +255,128 @@
     background-color: #333;
 }
 
+/* Footer */
+.footer {
+    background: linear-gradient(135deg, #4a00e0, #8e2de2);
+    color: white;
+    padding: 50px 0 20px;
+}
+
+.footer h5 {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.footer a {
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.footer a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+/* Profile Page Specific Styles */
+.profile-sidebar {
+    height: 100%;
+}
+
+.profile-image-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    border: 3px solid #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.profile-stats {
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item h5 {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.profile-skills {
+    padding: 15px 0;
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 /* Responsive Ayarlamalar */
 @media (max-width: 768px) {
     .auth-hero {
-        padding: 70px 0 30px;
+        padding: 80px 0 120px;
     }
     
-    .auth-card .card-body {
-        padding: 30px 20px;
+    .auth-container {
+        margin-top: -30px;
     }
     
-    .user-type-radio label {
-        width: 80px;
-        height: 80px;
+    .social-login-buttons {
+        flex-wrap: wrap;
     }
 }
 
