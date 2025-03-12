@@ -1,0 +1,48 @@
+/* Genel Stiller */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 3rem 0;
+    margin-top: 3rem;
+}
+
+.social-icons a {
+    color: white;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.social-icons a:hover {
+    color: #0d6efd;
+}
+
+/* Navbar Stilleri */
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Kart Stilleri */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.mission-vision-card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.project-card {
+    border-radius: 10px;
+    overflow: hidden;
+} 

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yarışmalar - Tugeto</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/competitions.style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+</head>
+<body class="font-monospace">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'app:index' %}">
+            <img src="{% static 'app/assets/Adsız_tasarım-removebg-preview.png' %}" alt="Tugeto Logo" height="30" class="d-inline-block align-text-top me-2">
+            Tugeto
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item mx-2">
+                    <a class="nav-link" href="{% url 'app:index' %}">
+                        <i class="fas fa-home me-1"></i>
+                        Ana Sayfa
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" href="{% url 'app:forum' %}">
+                        <i class="fas fa-comments me-1"></i>
+                        Forum
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" href="{% url 'app:yarisma' %}">
+                        <i class="fas fa-trophy me-1"></i>
+                        Yarışmalar
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" href="{% url 'app:hakkimizda' %}">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Hakkımızda
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" href="{% url 'app:iletisim' %}">
+                        <i class="fas fa-envelope me-1"></i>
+                        İletişim
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex">
+                <a class="btn btn-outline-light me-2" href="{% url 'app:login' %}">
+                    <i class="fas fa-sign-in-alt me-1"></i>
+                    Giriş Yap
+                </a>
+                <a class="btn btn-outline-light" href="{% url 'app:register' %}">
+                    <i class="fas fa-user-plus me-1"></i>
+                    Kayıt Ol
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <!-- Hero Bölümü -->
+    <section class="competitions-hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                    <h1 class="display-3 fw-bold mb-4">Yarışmalar</h1>
+                    <p class="lead mb-4">Yeteneklerinizi gösterin, ödülleri kazanın ve teknoloji dünyasında iz bırakın</p>
+                </div>
+            </div>
+        </div>
+        <div class="competitions-hero-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
+        </div>
+    </section>
+
+    <!-- Filtre Bölümü -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div data-aos="fade-right">
+                            <h2 class="section-title mb-0">Aktif Yarışmalar</h2>
+                        </div>
+                        <div class="d-flex gap-3" data-aos="fade-left">
+                            <select class="form-select filter-select">
+                                <option selected>Tüm Kategoriler</option>
+                                <option>Web Geliştirme</option>
+                                <option>Yapay Zeka</option>
+                                <option>Oyun Geliştirme</option>
+                                <option>Mobil Uygulama</option>
+                            </select>
+                            <select class="form-select filter-select">
+                                <option selected>Tüm Seviyeler</option>
+                                <option>Başlangıç</option>
+                                <option>Orta</option>
+                                <option>İleri</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aktif Yarışmalar -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Yarışma 1 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card competition-card">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Web Hackathon</h5>
+                            <span class="badge bg-warning">2 Hafta Kaldı</span>
+                        </div>
+                        <img src="https://img.freepik.com/free-photo/programming-background-with-person-working-with-codes-computer_23-2150010125.jpg" class="card-img-top" alt="Web Hackathon">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-trophy text-warning me-2"></i>
+                                <span class="fw-bold">Ödül: </span>50.000 TL
+                            </div>
+                            <p class="card-text mb-4">Modern web teknolojileri kullanarak yenilikçi çözümler geliştirin. React, Vue.js, Angular gibi frontend teknolojileri ile kullanıcı dostu arayüzler tasarlayın.</p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i> 120 Katılımcı
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-layer-group me-1"></i> Orta Seviye
+                                </small>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-primary" style="width: 70%"></div>
+                            </div>
+                            <small class="text-muted d-block mb-4">Doluluk: %70</small>
+                            <a href="#" class="btn btn-primary w-100">
+                                <i class="fas fa-rocket me-2"></i>Hemen Katıl
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yarışma 2 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card competition-card">
+                        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">AI Challenge</h5>
+                            <span class="badge bg-warning">5 Gün Kaldı</span>
+                        </div>
+                        <img src="https://img.freepik.com/free-photo/ai-nuclear-energy-background-future-innovation-disruptive-technology_53876-129783.jpg" class="card-img-top" alt="AI Challenge">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-trophy text-warning me-2"></i>
+                                <span class="fw-bold">Ödül: </span>75.000 TL
+                            </div>
+                            <p class="card-text mb-4">Yapay zeka modelleri ile gerçek dünya problemlerine çözüm üretin. TensorFlow, PyTorch gibi kütüphaneler kullanarak inovatif projeler geliştirin.</p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i> 85 Katılımcı
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-layer-group me-1"></i> İleri Seviye
+                                </small>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-success" style="width: 85%"></div>
+                            </div>
+                            <small class="text-muted d-block mb-4">Doluluk: %85</small>
+                            <a href="#" class="btn btn-success w-100">
+                                <i class="fas fa-rocket me-2"></i>Hemen Katıl
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yarışma 3 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card competition-card">
+                        <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Game Jam</h5>
+                            <span class="badge bg-warning">1 Ay Kaldı</span>
+                        </div>
+                        <img src="https://img.freepik.com/free-photo/medium-shot-man-wearing-vr-glasses_23-2149126949.jpg" class="card-img-top" alt="Game Jam">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-trophy text-warning me-2"></i>
+                                <span class="fw-bold">Ödül: </span>30.000 TL
+                            </div>
+                            <p class="card-text mb-4">48 saat içinde özgün bir oyun geliştirin ve yaratıcılığınızı gösterin. Unity, Unreal Engine gibi oyun motorları ile heyecan verici deneyimler yaratın.</p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i> 200 Katılımcı
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-layer-group me-1"></i> Tüm Seviyeler
+                                </small>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-danger" style="width: 40%"></div>
+                            </div>
+                            <small class="text-muted d-block mb-4">Doluluk: %40</small>
+                            <a href="#" class="btn btn-danger w-100">
+                                <i class="fas fa-rocket me-2"></i>Hemen Katıl
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Yakında Başlayacak Yarışmalar -->
+    <section class="upcoming-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="section-title" data-aos="fade-up">Yakında Başlayacak Yarışmalar</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                <!-- Yakında Başlayacak Yarışma 1 -->
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card upcoming-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="card-title mb-0">Mobile App Innovation</h4>
+                                <span class="badge bg-secondary">15 Gün Sonra Başlıyor</span>
+                            </div>
+                            <p class="card-text mb-4">Yenilikçi mobil uygulama fikirleriyle geleceği şekillendirin. Flutter, React Native veya native platformlar ile kullanıcı dostu uygulamalar geliştirin.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-trophy text-warning me-2"></i>
+                                    <span class="fw-bold">Ödül: </span>45.000 TL
+                                </div>
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-bell me-2"></i>Hatırlatıcı Kur
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yakında Başlayacak Yarışma 2 -->
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card upcoming-card">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="card-title mb-0">IoT Challenge</h4>
+                                <span class="badge bg-secondary">1 Ay Sonra Başlıyor</span>
+                            </div>
+                            <p class="card-text mb-4">Nesnelerin interneti teknolojileriyle akıllı çözümler geliştirin. Arduino, Raspberry Pi gibi platformlar kullanarak günlük hayatı kolaylaştıran projeler tasarlayın.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-trophy text-warning me-2"></i>
+                                    <span class="fw-bold">Ödül: </span>60.000 TL
+                                </div>
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-bell me-2"></i>Hatırlatıcı Kur
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Katılım Çağrısı -->
+    <section class="py-5">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card border-0 shadow-lg bg-primary text-white p-4 p-md-5" data-aos="fade-up">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8 mb-4 mb-lg-0">
+                                <h2 class="fw-bold mb-3">Kendi Yarışmanızı Düzenleyin!</h2>
+                                <p class="mb-0">Şirketiniz veya kurumunuz için özel bir yarışma düzenlemek mi istiyorsunuz? Tugeto'nun geniş geliştirici ağından yararlanın.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <a href="{% url 'app:iletisim' %}" class="btn btn-light btn-lg px-4 py-3">
+                                    <i class="fas fa-envelope me-2"></i>İletişime Geçin
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <img src="{% static 'app/assets/Adsız_tasarım-removebg-preview.png' %}" alt="Tugeto Logo" height="50">
+                <p class="mt-3">Yazılım dünyasında yenilikçi fikirleri destekleyen ve geliştiren topluluk platformu.</p>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <h5>Hızlı Bağlantılar</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'app:index' %}" class="text-white text-decoration-none">Ana Sayfa</a></li>
+                    <li><a href="{% url 'app:forum' %}" class="text-white text-decoration-none">Forum</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Projeler</a></li>
+                    <li><a href="{% url 'app:hakkimizda' %}" class="text-white text-decoration-none">Hakkımızda</a></li>
+                    <li><a href="{% url 'app:iletisim' %}" class="text-white text-decoration-none">İletişim</a></li>
+                    <li><a href="{% url 'app:privacy_policy' %}" class="text-white text-decoration-none">Gizlilik Politikası</a></li>
+                    <li><a href="{% url 'app:terms' %}" class="text-white text-decoration-none">Kullanım Şartları</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <h5>Bültenimize Abone Olun</h5>
+                <p class="mb-3">En güncel teknoloji ve mühendislik haberlerini kaçırmayın!</p>
+                <form class="newsletter-form">
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="E-posta adresiniz" required>
+                        <button class="btn btn-primary" type="submit">Abone Ol</button>
+                    </div>
+                </form>
+                <div class="social-icons mt-4">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-4">
+        <div class="text-center">
+            <p class="mb-0">&copy; 2024 Tugeto. Tüm hakları saklıdır.</p>
+        </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html> 

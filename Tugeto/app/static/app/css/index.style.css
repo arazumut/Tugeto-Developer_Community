@@ -1,0 +1,195 @@
+/* Ana Sayfa Özel Stilleri */
+.main-container {
+    display: grid;
+    grid-template-columns: 250px 1fr 250px;
+    min-height: calc(100vh - 56px);
+}
+
+.side-panel {
+    height: 100%;
+}
+
+.side-panel-left {
+    grid-column: 1;
+}
+
+.main-content {
+    grid-column: 2;
+    padding: 2rem;
+}
+
+.side-panel-right {
+    grid-column: 3;
+}
+
+.welcome-text {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+/* Mobil Görünüm için Düzenlemeler */
+@media (max-width: 992px) {
+    .main-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .side-panel-left, .side-panel-right {
+        display: none;
+    }
+    
+    .main-content {
+        grid-column: 1;
+    }
+}
+
+/* Ana Sayfa Stilleri */
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+    color: #fff;
+    position: relative;
+    padding: 80px 0;
+    overflow: hidden;
+}
+
+.hero-bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDQwIiBoZWlnaHQ9IjgxMCIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDE0NDAgODEwIj48ZyBvcGFjaXR5PSIuMSI+PGNpcmNsZSBjeD0iNTg4LjUiIGN5PSIzNTkuNSIgcj0iNTguNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjI2NC41IiBjeT0iNTU5LjUiIHI9IjU4LjUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSI5NTguNSIgY3k9IjQ1OS41IiByPSI1OC41IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iNzU4LjUiIGN5PSI2NTkuNSIgcj0iNTguNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjExNTguNSIgY3k9IjI1OS41IiByPSI1OC41IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMzg4LjUiIGN5PSIxNTkuNSIgcj0iNTguNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjE1OC41IiBjeT0iMzU5LjUiIHI9IjU4LjUiIGZpbGw9IiNmZmYiLz48L2c+PC9zdmc+');
+    background-size: cover;
+    opacity: 0.1;
+}
+
+.z-index-1 {
+    position: relative;
+    z-index: 1;
+}
+
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-wave {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+}
+
+/* Özellikler Bölümü */
+.feature-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.feature-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: rgba(13, 110, 253, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+/* İstatistikler Bölümü */
+.stats-section {
+    background-color: #f8f9fa;
+}
+
+.stat-item {
+    padding: 20px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background-color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.counter {
+    font-weight: 700;
+}
+
+/* Blog Kartları */
+.blog-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.blog-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.blog-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Yarışma Kartları */
+.competition-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.competition-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.competition-card .card-header {
+    border-radius: 12px 12px 0 0;
+}
+
+/* CTA Bölümü */
+.cta-card {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    transition: all 0.3s ease;
+}
+
+.cta-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Responsive Ayarlar */
+@media (max-width: 992px) {
+    .min-vh-75 {
+        min-height: auto;
+        padding: 60px 0;
+    }
+    
+    .hero-section {
+        padding: 60px 0 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+    
+    .hero-section .d-flex {
+        justify-content: center;
+    }
+} 
