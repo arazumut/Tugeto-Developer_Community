@@ -14,9 +14,39 @@ Date : 13.03.2025 ö3.08am
     .about-hero {
         background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
         color: white;
-        padding: 15rem 0;
-        margin-bottom: 7rem;
+        padding: 6rem 0 8rem;
+        margin-bottom: 3rem;
         position: relative;
+        text-align: center;
+    }
+    
+    @media (min-width: 768px) {
+        .about-hero {
+            padding: 10rem 0 12rem;
+            margin-bottom: 5rem;
+        }
+    }
+    
+    .about-hero h1 {
+        font-size: calc(1.8rem + 1vw);
+    }
+    
+    @media (min-width: 768px) {
+        .about-hero h1 {
+            font-size: calc(2.2rem + 1vw);
+        }
+    }
+    
+    .about-hero p {
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+    
+    @media (min-width: 768px) {
+        .about-hero p {
+            font-size: 1.25rem;
+            padding: 0;
+        }
     }
     
     .about-hero-wave {
@@ -29,36 +59,68 @@ Date : 13.03.2025 ö3.08am
     }
     
     .story-section {
-        padding: 5rem 0;
+        padding: 2rem 0;
+    }
+    
+    @media (min-width: 768px) {
+        .story-section {
+            padding: 4rem 0;
+        }
     }
     
     .story-image {
         border-radius: 10px;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+    
+    @media (min-width: 992px) {
+        .story-image {
+            margin-bottom: 0;
+        }
     }
     
     .story-content {
-        padding: 2rem;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    @media (min-width: 768px) {
+        .story-content {
+            padding: 2rem;
+            text-align: left;
+        }
     }
     
     .mission-vision-section {
-        padding: 5rem 0;
+        padding: 2rem 0;
         background-color: #f8f9fa;
+    }
+    
+    @media (min-width: 768px) {
+        .mission-vision-section {
+            padding: 4rem 0;
+        }
     }
     
     .mission-vision-card {
         border-radius: 10px;
         transition: transform 0.3s;
+        height: 100%;
+        margin-bottom: 1.5rem;
+        border: none;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
     }
     
     .mission-vision-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
     }
     
     .mission-vision-icon {
-        width: 80px;
-        height: 80px;
+        width: 65px;
+        height: 65px;
         background-color: rgba(75, 108, 183, 0.1);
         border-radius: 50%;
         display: flex;
@@ -66,25 +128,45 @@ Date : 13.03.2025 ö3.08am
         justify-content: center;
         margin: 0 auto 1.5rem;
         color: #4b6cb7;
-        font-size: 2rem;
+        font-size: 1.4rem;
+    }
+    
+    @media (min-width: 768px) {
+        .mission-vision-icon {
+            width: 80px;
+            height: 80px;
+            font-size: 2rem;
+        }
     }
     
     .values-section {
-        padding: 5rem 0;
+        padding: 2rem 0;
+    }
+    
+    @media (min-width: 768px) {
+        .values-section {
+            padding: 4rem 0;
+        }
     }
     
     .value-card {
-        border-radius: 10px;
+        border-radius: 15px;
+        overflow: hidden;
         transition: transform 0.3s;
+        margin-bottom: 1.5rem;
+        height: 100%;
+        border: none;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
     }
     
     .value-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
     }
     
     .value-icon {
-        width: 70px;
-        height: 70px;
+        width: 60px;
+        height: 60px;
         background-color: rgba(75, 108, 183, 0.1);
         border-radius: 50%;
         display: flex;
@@ -93,19 +175,37 @@ Date : 13.03.2025 ö3.08am
         margin: 0 auto 1.5rem;
     }
     
+    @media (min-width: 768px) {
+        .value-icon {
+            width: 70px;
+            height: 70px;
+        }
+    }
+    
     .team-section {
-        padding: 5rem 0;
+        padding: 2rem 0;
         background-color: #f8f9fa;
     }
     
+    @media (min-width: 768px) {
+        .team-section {
+            padding: 4rem 0;
+        }
+    }
+    
     .team-card {
-        border-radius: 10px;
+        border-radius: 15px;
         overflow: hidden;
         transition: transform 0.3s;
+        margin: 0 auto 2rem;
+        max-width: 280px;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     }
     
     .team-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
     }
     
     .social-links a {
@@ -117,11 +217,155 @@ Date : 13.03.2025 ö3.08am
         align-items: center;
         justify-content: center;
         transition: all 0.3s;
+        margin: 0 0.25rem;
     }
     
     .social-links a:hover {
         background-color: #4b6cb7;
         color: white !important;
+    }
+    
+    .call-to-action {
+        padding: 2rem 0;
+    }
+    
+    @media (min-width: 768px) {
+        .call-to-action {
+            padding: 3rem 0;
+        }
+    }
+    
+    .cta-card {
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    @media (min-width: 768px) {
+        .cta-card {
+            padding: 2.5rem;
+            text-align: left;
+        }
+    }
+    
+    .btn-cta {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    
+    @media (min-width: 768px) {
+        .btn-cta {
+            width: auto;
+            margin-top: 0;
+        }
+    }
+    
+    .section-title {
+        position: relative;
+        display: inline-block;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-size: calc(1.2rem + 0.5vw);
+        text-align: center;
+        margin-bottom: 2rem;
+        width: 100%;
+    }
+    
+    @media (min-width: 768px) {
+        .section-title {
+            margin-bottom: 3rem;
+        }
+    }
+    
+    /* Mobil için ek uyarlamalar */
+    @media (max-width: 768px) {
+        .about-hero {
+            padding: 4rem 0 8rem;
+            margin-bottom: 2rem;
+        }
+        
+        .about-hero h1 {
+            font-size: calc(1.6rem + 1vw);
+            margin-bottom: 1rem;
+        }
+        
+        .about-hero p {
+            font-size: 0.95rem;
+            padding: 0 1rem;
+        }
+        
+        .story-section {
+            padding: 2rem 1rem;
+        }
+        
+        .story-image {
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
+        
+        .mission-vision-card {
+            margin-bottom: 1rem;
+        }
+        
+        .mission-vision-icon, .value-icon {
+            margin-bottom: 1rem;
+        }
+        
+        .value-card {
+            margin: 0 0.5rem 1rem;
+        }
+        
+        .team-card {
+            margin: 0 auto 1.5rem;
+        }
+        
+        .call-to-action .card-body {
+            padding: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .about-hero {
+            padding: 3rem 0 6rem;
+        }
+        
+        .about-hero h1 {
+            font-size: 1.8rem;
+        }
+        
+        .about-hero p {
+            font-size: 0.9rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .mission-vision-icon, .value-icon {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 1rem;
+        }
+        
+        .h4 {
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .card p {
+            font-size: 0.9rem;
+        }
+        
+        .btn-cta {
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+        }
     }
 </style>
 {% endblock %}
@@ -131,11 +375,11 @@ Date : 13.03.2025 ö3.08am
     <section class="about-hero">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up" style="margin-top: -50px">
-                    <h1 class="display-3 fw-bold mb-4">Tugeto Hakkında</h1>
+                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                    <h1 class="display-4 fw-bold mb-3">Tugeto Hakkında</h1>
                     <p class="lead mb-4">Mühendislik ve yazılım dünyasında yenilikçi fikirleri destekleyen ve geliştiren topluluk platformu</p>
-                    <div class="d-flex justify-content-center gap-3">
-                        <a href="{% url 'app:iletisim' %}" class="btn btn-light btn-lg px-4">
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 gap-sm-3">
+                        <a href="{% url 'app:iletisim' %}" class="btn btn-light btn-lg px-4 mb-2 mb-sm-0">
                             <i class="fas fa-envelope me-2"></i>Bize Ulaşın
                         </a>
                         {% if not user.is_authenticated %}
@@ -159,15 +403,20 @@ Date : 13.03.2025 ö3.08am
     <!-- Hikayemiz Bölümü -->
     <section class="story-section">
         <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-4 d-block d-lg-none">
+                    <h2 class="section-title">Hikayemiz</h2>
+                </div>
+            </div>
             <div class="row align-items-center">
-                <div class="col-lg-6" data-aos="fade-right">
+                <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
                     <div class="story-image">
                         <img src="https://img.freepik.com/free-photo/group-diverse-people-having-business-meeting_53876-25060.jpg" alt="Tugeto Ekibi" class="img-fluid">
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-left">
                     <div class="story-content">
-                        <h2 class="fw-bold">Hikayemiz</h2>
+                        <h2 class="fw-bold mb-4 d-none d-lg-block">Hikayemiz</h2>
                         <p class="mb-4">Tugeto, 2024 yılında mühendislik ve yazılım alanlarında çalışan profesyonellerin bir araya gelerek oluşturduğu yenilikçi bir platformdur. Amacımız, bu alanlardaki bilgi ve deneyim paylaşımını artırarak, toplumsal fayda sağlayan projelerin geliştirilmesine katkıda bulunmaktır.</p>
                         <p class="mb-4">Platformumuz, farklı disiplinlerden uzmanların bir araya gelerek işbirliği yapabilecekleri, projelerini paylaşabilecekleri ve yeni fikirler geliştirebilecekleri bir ekosistem sunmaktadır.</p>
                         <p>Tugeto'nun kuruluş amacı, teknoloji ve mühendislik alanlarında bilgi paylaşımını artırmak, açık kaynak projeleri desteklemek ve yenilikçi fikirlerin hayata geçirilmesine olanak sağlamaktır.</p>
@@ -180,32 +429,32 @@ Date : 13.03.2025 ö3.08am
     <!-- Misyon ve Vizyon -->
     <section class="mission-vision-section">
         <div class="container">
-            <div class="row justify-content-center mb-5">
-                <div class="col-lg-6 text-center" data-aos="fade-up">
-                    <h2 class="fw-bold mb-3">Misyon ve Vizyonumuz</h2>
-                    <p class="text-muted">Geleceği şekillendiren teknolojileri ve fikirleri destekliyoruz</p>
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-up">
+                    <h2 class="section-title">Misyon ve Vizyonumuz</h2>
+                    <p class="text-muted mb-4">Geleceği şekillendiren teknolojileri ve fikirleri destekliyoruz</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card border-0 shadow-sm mission-vision-card h-100">
+            <div class="row g-3">
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card mission-vision-card">
                         <div class="card-body p-4 text-center">
                             <div class="mission-vision-icon">
                                 <i class="fas fa-bullseye"></i>
                             </div>
                             <h3 class="h4 mb-3">Misyonumuz</h3>
-                            <p class="text-muted">Mühendislik ve yazılım alanlarında bilgi paylaşımını artırmak, açık kaynak projeleri desteklemek ve yenilikçi fikirlerin hayata geçirilmesine olanak sağlamak. Topluluk üyelerimizin profesyonel gelişimlerine katkıda bulunarak, teknoloji dünyasında iz bırakan projelerin ortaya çıkmasını sağlamak.</p>
+                            <p class="text-muted mb-0">Mühendislik ve yazılım alanlarında bilgi paylaşımını artırmak, açık kaynak projeleri desteklemek ve yenilikçi fikirlerin hayata geçirilmesine olanak sağlamak. Topluluk üyelerimizin profesyonel gelişimlerine katkıda bulunarak, teknoloji dünyasında iz bırakan projelerin ortaya çıkmasını sağlamak.</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card border-0 shadow-sm mission-vision-card h-100">
+                <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card mission-vision-card">
                         <div class="card-body p-4 text-center">
                             <div class="mission-vision-icon">
                                 <i class="fas fa-binoculars"></i>
                             </div>
                             <h3 class="h4 mb-3">Vizyonumuz</h3>
-                            <p class="text-muted">Türkiye'nin en büyük ve en etkili mühendislik ve yazılım topluluğu olmak. Geliştirdiğimiz projeler ve yarattığımız değerlerle global ölçekte tanınan, teknoloji dünyasına yön veren bir platform haline gelmek. Üyelerimizin kariyerlerinde fark yaratan, sektörde aranan profesyoneller olmalarını sağlamak.</p>
+                            <p class="text-muted mb-0">Türkiye'nin en büyük ve en etkili mühendislik ve yazılım topluluğu olmak. Geliştirdiğimiz projeler ve yarattığımız değerlerle global ölçekte tanınan, teknoloji dünyasına yön veren bir platform haline gelmek. Üyelerimizin kariyerlerinde fark yaratan, sektörde aranan profesyoneller olmalarını sağlamak.</p>
                         </div>
                     </div>
                 </div>
@@ -216,43 +465,43 @@ Date : 13.03.2025 ö3.08am
     <!-- Değerlerimiz -->
     <section class="values-section">
         <div class="container">
-            <div class="row justify-content-center mb-5">
-                <div class="col-lg-6 text-center" data-aos="fade-up">
-                    <h2 class="fw-bold mb-3">Değerlerimiz</h2>
-                    <p class="text-muted">Tugeto'yu şekillendiren temel prensipler</p>
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-up">
+                    <h2 class="section-title">Değerlerimiz</h2>
+                    <p class="text-muted mb-4">Tugeto'yu şekillendiren temel prensipler</p>
                 </div>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card h-100 border-0 shadow-sm value-card">
+            <div class="row g-3">
+                <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card value-card">
                         <div class="card-body text-center p-4">
                             <div class="value-icon">
                                 <i class="fas fa-handshake fa-2x text-primary"></i>
                             </div>
                             <h3 class="h4 mb-3">İşbirliği</h3>
-                            <p class="text-muted">Farklı disiplinlerden uzmanların bir araya gelerek ortak projeler geliştirmesini destekliyoruz. Birlikte çalışarak daha büyük başarılara imza atabileceğimize inanıyoruz.</p>
+                            <p class="text-muted mb-0">Farklı disiplinlerden uzmanların bir araya gelerek ortak projeler geliştirmesini destekliyoruz. Birlikte çalışarak daha büyük başarılara imza atabileceğimize inanıyoruz.</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card h-100 border-0 shadow-sm value-card">
+                <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card value-card">
                         <div class="card-body text-center p-4">
                             <div class="value-icon">
                                 <i class="fas fa-lightbulb fa-2x text-primary"></i>
                             </div>
                             <h3 class="h4 mb-3">Yenilikçilik</h3>
-                            <p class="text-muted">Teknoloji ve bilimin ışığında yenilikçi çözümler üretmeyi hedefliyoruz. Sürekli öğrenme ve gelişme odaklı bir yaklaşımla hareket ediyoruz.</p>
+                            <p class="text-muted mb-0">Teknoloji ve bilimin ışığında yenilikçi çözümler üretmeyi hedefliyoruz. Sürekli öğrenme ve gelişme odaklı bir yaklaşımla hareket ediyoruz.</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="card h-100 border-0 shadow-sm value-card">
+                <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card value-card">
                         <div class="card-body text-center p-4">
                             <div class="value-icon">
                                 <i class="fas fa-users fa-2x text-primary"></i>
                             </div>
                             <h3 class="h4 mb-3">Topluluk</h3>
-                            <p class="text-muted">Bilgi paylaşımını ve topluluk ruhunu ön planda tutuyoruz. Herkesin fikirlerini özgürce paylaşabildiği, saygı ve güven ortamı oluşturmayı amaçlıyoruz.</p>
+                            <p class="text-muted mb-0">Bilgi paylaşımını ve topluluk ruhunu ön planda tutuyoruz. Herkesin fikirlerini özgürce paylaşabildiği, saygı ve güven ortamı oluşturmayı amaçlıyoruz.</p>
                         </div>
                     </div>
                 </div>
@@ -263,32 +512,32 @@ Date : 13.03.2025 ö3.08am
     <!-- Ekibimiz -->
     <section class="team-section">
         <div class="container">
-            <div class="row justify-content-center mb-5">
-                <div class="col-lg-6 text-center" data-aos="fade-up">
-                    <h2 class="fw-bold mb-3">Ekibimiz</h2>
-                    <p class="text-muted">Tugeto'yu oluşturan tutkulu ve yetenekli profesyoneller</p>
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-up">
+                    <h2 class="section-title">Ekibimiz</h2>
+                    <p class="text-muted mb-4">Tugeto'yu oluşturan tutkulu ve yetenekli profesyoneller</p>
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-md-3 mb-4 mx-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card border-0 shadow-sm team-card">
+            <div class="row justify-content-center g-3">
+                <div class="col-10 col-sm-8 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card team-card">
                         <img src="{% static 'app/assets/images/umut.png' %}" class="card-img-top" alt="Ekip Üyesi">
-                        <div class="card-body text-center">
+                        <div class="card-body text-center p-4">
                             <h5 class="card-title mb-1">K. Umut Araz</h5>
                             <p class="text-muted small mb-3">Full Stack Developer, Python Tutor</p>
                             <p class="small text-muted mb-3">Python, Golang ve bir çok teknolojiyle çalıştı. Junior Frontend ve Backend Developer.</p>
                             <div class="social-links">
-                                <a href="https://www.linkedin.com/in/k-umut-araz-56712629a/" class="text-dark me-2"><i class="fab fa-linkedin"></i></a>
-                                <a href="https://www.instagram.com/k.umutarazz/" class="text-dark me-2"><i class="fab fa-instagram"></i></a>
+                                <a href="https://www.linkedin.com/in/k-umut-araz-56712629a/" class="text-dark"><i class="fab fa-linkedin"></i></a>
+                                <a href="https://www.instagram.com/k.umutarazz/" class="text-dark"><i class="fab fa-instagram"></i></a>
                                 <a href="https://github.com/arazumut" class="text-dark"><i class="fab fa-github"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4 mx-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card border-0 shadow-sm team-card">
+                <div class="col-10 col-sm-8 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card team-card">
                         <img src="{% static 'app/assets/images/image.png' %}" class="card-img-top" alt="Ekip Üyesi">
-                        <div class="card-body text-center">
+                        <div class="card-body text-center p-4">
                             <h5 class="card-title mb-1">Alper Ufuk Ak</h5>
                             <p class="text-muted small mb-3">Fikir Sahibi, Developer</p>
                             <p class="small text-muted mb-3">Fikir üretmekten keyif alan birisi. Tugeto'nun fikrini ortaya koyan kişi.</p>
@@ -303,23 +552,23 @@ Date : 13.03.2025 ö3.08am
     </section>
 
     <!-- Katılım Çağrısı -->
-    <section class="py-5">
-        <div class="container py-5">
+    <section class="py-4 py-md-5">
+        <div class="container py-3">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    <div class="card border-0 shadow-lg bg-primary text-white p-4 p-md-5" data-aos="fade-up">
-                        <div class="row align-items-center">
-                            <div class="col-lg-8 mb-4 mb-lg-0">
+                    <div class="card border-0 shadow-lg bg-primary text-white p-3 p-md-4" data-aos="fade-up">
+                        <div class="row align-items-center text-center text-lg-start">
+                            <div class="col-lg-8 mb-3 mb-lg-0">
                                 <h2 class="fw-bold mb-3">Tugeto Ailesine Katılın!</h2>
                                 <p class="mb-0">Mühendislik ve yazılım dünyasında yenilikçi fikirleri destekleyen ve geliştiren topluluğumuzun bir parçası olun.</p>
                             </div>
-                            <div class="col-lg-4 text-lg-end">
+                            <div class="col-lg-4 text-center text-lg-end">
                                 {% if not user.is_authenticated %}
-                                <a href="{% url 'app:register' %}" class="btn btn-light btn-lg px-4 py-3">
+                                <a href="{% url 'app:register' %}" class="btn btn-light btn-lg px-4 py-2 w-100 w-lg-auto">
                                     <i class="fas fa-user-plus me-2"></i>Hemen Üye Ol
                                 </a>
                                 {% else %}
-                                <a href="{% url 'app:forum' %}" class="btn btn-light btn-lg px-4 py-3">
+                                <a href="{% url 'app:forum' %}" class="btn btn-light btn-lg px-4 py-2 w-100 w-lg-auto">
                                     <i class="fas fa-comments me-2"></i>Foruma Katıl
                                 </a>
                                 {% endif %}
@@ -330,4 +579,4 @@ Date : 13.03.2025 ö3.08am
             </div>
         </div>
     </section>
-{% endblock %} 
+{% endblock %}

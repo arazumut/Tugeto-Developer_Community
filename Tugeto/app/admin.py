@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import (
     User, Skill, ForumCategory, ForumTopic, ForumComment,
     CompetitionCategory, Competition, CompetitionParticipant,
-    BlogPost, Tag, Notification, Message
+    BlogPost, Tag, Notification, Message, CompetitionAnnouncement
 )
 
 class CustomUserAdmin(UserAdmin):
@@ -31,10 +31,11 @@ class ForumCommentAdmin(admin.ModelAdmin):
     search_fields = ('content', 'author__username', 'topic__title')
 
 class CompetitionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'level', 'status', 'start_date', 'end_date', 'created_by')
-    list_filter = ('category', 'level', 'status', 'start_date', 'end_date')
-    search_fields = ('title', 'description', 'created_by__username')
+    list_display = ['title', 'category', 'level', 'status', 'start_date', 'end_date', 'organizer']
+    list_filter = ['category', 'level', 'status']
+    search_fields = ['title', 'description']
     prepopulated_fields = {'slug': ('title',)}
+    date_hierarchy = 'start_date'
 
 class CompetitionParticipantAdmin(admin.ModelAdmin):
     list_display = ('competition', 'user', 'joined_at', 'submission_date', 'score')
@@ -71,3 +72,4 @@ admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(Tag)
 admin.site.register(Notification, NotificationAdmin)
 admin.site.register(Message, MessageAdmin)
+admin.site.register(CompetitionAnnouncement)

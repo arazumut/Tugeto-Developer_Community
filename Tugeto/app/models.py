@@ -159,68 +159,92 @@ class CompetitionCategory(models.Model):
         verbose_name_plural = "Yarışma Kategorileri"
 
 class Competition(models.Model):
-    """
-    Yarışma modeli.
-    """
-    LEVEL_CHOICES = (
+    CATEGORY_CHOICES = [
+        ('web', 'Web Geliştirme'),
+        ('ai', 'Yapay Zeka'),
+        ('game', 'Oyun Geliştirme'),
+        ('mobile', 'Mobil Uygulama'),
+        ('other', 'Diğer'),
+    ]
+    
+    LEVEL_CHOICES = [
         ('beginner', 'Başlangıç'),
         ('intermediate', 'Orta'),
         ('advanced', 'İleri'),
-    )
+        ('all', 'Tüm Seviyeler'),
+    ]
     
-    STATUS_CHOICES = (
+    STATUS_CHOICES = [
         ('upcoming', 'Yakında'),
         ('active', 'Aktif'),
         ('completed', 'Tamamlandı'),
-    )
-    
+    ]
+
     title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
     description = models.TextField()
-    category = models.ForeignKey(CompetitionCategory, on_delete=models.CASCADE, related_name='competitions')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     level = models.CharField(max_length=20, choices=LEVEL_CHOICES)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
+    
+    prize = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to='competition_images/')
+    
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    prize = models.CharField(max_length=200)
-    rules = models.TextField()
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_competitions')
-    participants = models.ManyToManyField(User, through='CompetitionParticipant', related_name='participating_competitions')
-    max_participants = models.PositiveIntegerField(default=100)
-    slug = models.SlugField(unique=True)
+    registration_deadline = models.DateTimeField()
+    
+    max_participants = models.PositiveIntegerField()
+    current_participants = models.PositiveIntegerField(default=0)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='organized_competitions')
+    participants = models.ManyToManyField(User, through='CompetitionParticipant', related_name='participated_competitions')
+    
+    def __str__(self):
+        return self.title
     
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
     
-    @property
-    def is_active(self):
-        now = timezone.now()
-        return self.start_date <= now <= self.end_date and self.status == 'active'
+    def get_completion_percentage(self):
+        if self.max_participants > 0:
+            return (self.current_participants / self.max_participants) * 100
+        return 0
     
-    @property
-    def participant_count(self):
-        return self.participants.count()
-    
-    def __str__(self):
-        return self.title
+    def get_remaining_time(self):
+        if self.status == 'upcoming':
+            return self.start_date - timezone.now()
+        elif self.status == 'active':
+            return self.end_date - timezone.now()
+        return None
 
 class CompetitionParticipant(models.Model):
-    """
-    Yarışma katılımcıları.
-    """
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     joined_at = models.DateTimeField(auto_now_add=True)
-    submission_url = models.URLField(blank=True, null=True)
-    submission_date = models.DateTimeField(blank=True, null=True)
-    score = models.FloatField(blank=True, null=True)
+    submission = models.FileField(upload_to='competition_submissions/', null=True, blank=True)
+    submission_date = models.DateTimeField(null=True, blank=True)
+    score = models.FloatField(null=True, blank=True)
     
     class Meta:
-        unique_together = ('competition', 'user')
+        unique_together = ['competition', 'user']
     
     def __str__(self):
         return f"{self.user.username} - {self.competition.title}"
+
+class CompetitionAnnouncement(models.Model):
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='announcements')
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.competition.title} - {self.title}"
 
 class BlogPost(models.Model):
     """

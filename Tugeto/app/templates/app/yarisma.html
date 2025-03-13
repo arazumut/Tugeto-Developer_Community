@@ -241,6 +241,15 @@ Date : 13.03.2025 ö3.08am
         </div>
     </section>
 
+    <!-- Yarışma Oluştur Butonu -->
+    {% if user.is_authenticated and user.is_staff or user.user_type == 'company' %}
+    <div class="text-end mb-4">
+        <a href="{% url 'app:create_competition' %}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Yeni Yarışma Oluştur
+        </a>
+    </div>
+    {% endif %}
+
     <!-- Aktif Yarışmalar -->
     <section class="py-4">
         <div class="container">

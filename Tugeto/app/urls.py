@@ -21,6 +21,8 @@ urlpatterns = [
     path('forum/comment/solution/<int:comment_id>/', views.mark_solution, name='mark_solution'),
     path('forum/search/', views.search_forum, name='search_forum'),
     path('yarisma/', views.yarisma, name='yarisma'),
+    path('yarisma/olustur/', views.create_competition, name='create_competition'),
+    path('yarisma/<slug:slug>/', views.competition_detail, name='competition_detail'),
     path('hakkimizda/', views.hakkimizda, name='hakkimizda'),
     path('iletisim/', views.iletisim, name='iletisim'),
     
@@ -34,4 +36,8 @@ urlpatterns = [
     
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     path('terms/', views.terms, name='terms'),
+
+    path('yarisma/yonetim/', views.manage_competitions, name='manage_competitions'),
+    path('yarisma/duzenle/<slug:slug>/', views.edit_competition, name='edit_competition'),
+    path('yarisma/sil/<slug:slug>/', views.delete_competition, name='delete_competition'),
 ] 

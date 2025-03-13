@@ -1,0 +1,123 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Yarışma Oluştur - Tugeto{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    .create-competition-header {
+        background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+        color: white;
+        padding: 6rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <!-- Başlık -->
+    <section class="create-competition-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-4 fw-bold mb-4">Yarışma Oluştur</h1>
+                    <p class="lead mb-0">Yeni bir yarışma düzenleyerek toplulukla buluşun</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                
+                                <!-- Temel Bilgiler -->
+                                <h4 class="mb-4">Temel Bilgiler</h4>
+                                <div class="mb-4">
+                                    <label class="form-label">Yarışma Başlığı</label>
+                                    <input type="text" name="title" class="form-control" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label">Açıklama</label>
+                                    <textarea name="description" class="form-control" rows="5" required></textarea>
+                                </div>
+                                
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Kategori</label>
+                                        <select name="category" class="form-select" required>
+                                            <option value="">Seçiniz</option>
+                                            <option value="web">Web Geliştirme</option>
+                                            <option value="ai">Yapay Zeka</option>
+                                            <option value="game">Oyun Geliştirme</option>
+                                            <option value="mobile">Mobil Uygulama</option>
+                                            <option value="other">Diğer</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Seviye</label>
+                                        <select name="level" class="form-select" required>
+                                            <option value="">Seçiniz</option>
+                                            <option value="beginner">Başlangıç</option>
+                                            <option value="intermediate">Orta</option>
+                                            <option value="advanced">İleri</option>
+                                            <option value="all">Tüm Seviyeler</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Ödül ve Katılımcı Bilgileri -->
+                                <h4 class="mb-4">Ödül ve Katılımcı Bilgileri</h4>
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Ödül Miktarı (₺)</label>
+                                        <input type="number" name="prize" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Maksimum Katılımcı Sayısı</label>
+                                        <input type="number" name="max_participants" class="form-control" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tarih Bilgileri -->
+                                <h4 class="mb-4">Tarih Bilgileri</h4>
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Başlangıç Tarihi</label>
+                                        <input type="datetime-local" name="start_date" class="form-control flatpickr" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Bitiş Tarihi</label>
+                                        <input type="datetime-local" name="end_date" class="form-control flatpickr" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Son Kayıt Tarihi</label>
+                                        <input type="datetime-local" name="registration_deadline" class="form-control flatpickr" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- Resim -->
+                                <h4 class="mb-4">Resim</h4>
+                                <div class="mb-4">
+                                    <label class="form-label">Resim</label>
+                                    <input type="file" name="image" class="form-control" required>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary w-100">Yarışma Oluştur</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %} 

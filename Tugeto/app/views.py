@@ -6,9 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserRegisterForm, UserLoginForm, UserProfileForm
-from .models import User, Skill, ForumCategory, ForumTopic, ForumComment, Profile
+from .models import User, Skill, ForumCategory, ForumTopic, ForumComment, Profile, Competition, CompetitionParticipant, CompetitionAnnouncement
 from django.db.models import Count, Q
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 # Create your views here.
 def index(request):
@@ -235,7 +236,24 @@ def search_forum(request):
     return render(request, 'app/search_results.html', context)
 
 def yarisma(request):
-    return render(request, 'app/yarisma.html')
+    # Filtreleme parametrelerini al
+    category = request.GET.get('category')
+    level = request.GET.get('level')
+    status = request.GET.get('status', 'active')  # Varsayılan olarak aktif yarışmaları göster
+    
+    # Temel sorgu
+    competitions = Competition.objects.all()
+    
+    # Filtreleri uygula
+    if category and category != 'all':
+        competitions = competitions.filter(category=category)
+    if level and level != 'all':
+        competitions = competitions.filter(level=level)
+    
+    context = {
+        'competitions': competitions,
+    }
+    return render(request, 'app/yarisma.html', context)
 
 def hakkimizda(request):
     return render(request, 'app/hakkimizda.html')
@@ -272,46 +290,83 @@ def login_view(request):
     return render(request, 'app/login.html')
 
 def register_view(request):
-    """Kullanıcı kayıt görünümü"""
-    if request.user.is_authenticated:
-        return redirect('app:index')
-    
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
+        # Form verilerini manuel olarak işleyelim
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        user_type = request.POST.get('user_type')
+        skills = request.POST.get('skills')
+        
+        # Basit doğrulama
+        if not all([username, email, first_name, last_name, password1, password2]):
+            messages.error(request, 'Lütfen tüm zorunlu alanları doldurun.')
+            return redirect('app:register')
+        
+        if password1 != password2:
+            messages.error(request, 'Şifreler eşleşmiyor.')
+            return redirect('app:register')
+        
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Bu kullanıcı adı zaten kullanılıyor.')
+            return redirect('app:register')
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Bu e-posta adresi zaten kullanılıyor.')
+            return redirect('app:register')
+        
+        # Kullanıcıyı oluştur
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1,
+            first_name=first_name,
+            last_name=last_name
+        )
+        
+        # Kullanıcı tipini ayarla
+        user.user_type = user_type
+        user.save()
+        
+        # Profil oluştur
+        try:
+            profile = Profile.objects.create(user=user)
             
-            # Kullanıcı tipini ve yetenekleri profil modeline kaydet
-            user_type = form.cleaned_data.get('user_type')
-            if hasattr(user, 'profile'):
-                user.profile.user_type = user_type
-                user.profile.save()
+            # Kullanıcı tipini profile'a da yansıt
+            if user_type == 'student':
+                profile.user_type = 'P'  # Programcı
+            elif user_type == 'developer':
+                profile.user_type = 'M'  # Mühendis
+            else:
+                profile.user_type = 'D'  # Diğer (şirket veya eğitmen)
             
-            # Kullanıcı yeteneklerini ekle
-            skills = form.cleaned_data.get('skills')
-            if skills:
-                for skill_name in skills.split(','):
-                    skill_name = skill_name.strip()
-                    if skill_name:
-                        skill, created = Skill.objects.get_or_create(name=skill_name)
-                        user.skills.add(skill)
-            
-            # Kullanıcıyı otomatik olarak giriş yap
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
+            profile.save()
+        except Exception as e:
+            print(f"Profil oluşturma hatası: {e}")
+        
+        # Yetenekleri ekle
+        if skills:
+            skill_names = [s.strip() for s in skills.split(',')]
+            for skill_name in skill_names:
+                if skill_name:
+                    skill, created = Skill.objects.get_or_create(name=skill_name)
+                    user.skills.add(skill)
+        
+        messages.success(request, f'Hesabınız başarıyla oluşturuldu! Şimdi giriş yapabilirsiniz.')
+        
+        # Otomatik giriş yap
+        user = authenticate(username=username, password=password1)
+        if user is not None:
             login(request, user)
-            
-            messages.success(request, f'Hesabınız başarıyla oluşturuldu! Hoş geldiniz, {user.first_name}!')
+            messages.info(request, f'Hoş geldiniz, {user.first_name}!')
             return redirect('app:index')
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{field}: {error}")
-    else:
-        form = UserRegisterForm()
+            return redirect('app:login')
     
-    return render(request, 'app/register.html', {'form': form})
+    return render(request, 'app/register.html')
 
 @login_required
 def logout_view(request):
@@ -409,3 +464,168 @@ def change_password(request):
         return redirect('app:login')
     
     return redirect('app:profile')
+
+@login_required
+def create_competition(request):
+    if not request.user.is_staff and request.user.user_type != 'company':
+        messages.error(request, 'Yarışma oluşturma yetkiniz bulunmamaktadır.')
+        return redirect('app:yarisma')
+    
+    if request.method == 'POST':
+        # Form verilerini al
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        category = request.POST.get('category')
+        level = request.POST.get('level')
+        prize = request.POST.get('prize')
+        max_participants = request.POST.get('max_participants')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        registration_deadline = request.POST.get('registration_deadline')
+        image = request.FILES.get('image')
+        
+        # Yarışmayı oluştur
+        competition = Competition.objects.create(
+            title=title,
+            description=description,
+            category=category,
+            level=level,
+            prize=prize,
+            max_participants=max_participants,
+            start_date=start_date,
+            end_date=end_date,
+            registration_deadline=registration_deadline,
+            image=image,
+            organizer=request.user,
+            status='active'  # Varsayılan olarak aktif
+        )
+        
+        messages.success(request, 'Yarışma başarıyla oluşturuldu!')
+        return redirect('app:competition_detail', slug=competition.slug)
+    
+    # GET isteği için şablonu render et
+    return render(request, 'app/create_competition.html')
+
+@login_required
+def manage_competitions(request):
+    if not request.user.is_staff and request.user.user_type != 'company':
+        messages.error(request, 'Bu sayfaya erişim yetkiniz bulunmamaktadır.')
+        return redirect('app:yarisma')
+    
+    # Şirket kullanıcıları sadece kendi yarışmalarını görebilir
+    if request.user.user_type == 'company':
+        competitions = Competition.objects.filter(organizer=request.user)
+    # Admin kullanıcıları tüm yarışmaları görebilir
+    else:
+        competitions = Competition.objects.all()
+    
+    context = {
+        'competitions': competitions
+    }
+    return render(request, 'app/manage_competitions.html', context)
+
+def competition_detail(request, slug):
+    competition = get_object_or_404(Competition, slug=slug)
+    is_participant = False
+    
+    if request.user.is_authenticated:
+        is_participant = CompetitionParticipant.objects.filter(
+            competition=competition,
+            user=request.user
+        ).exists()
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        if 'join' in request.POST:
+            # Yarışmaya katılma işlemi
+            if competition.current_participants < competition.max_participants:
+                CompetitionParticipant.objects.create(
+                    competition=competition,
+                    user=request.user
+                )
+                competition.current_participants += 1
+                competition.save()
+                messages.success(request, 'Yarışmaya başarıyla katıldınız!')
+                return redirect('app:competition_detail', slug=slug)
+            else:
+                messages.error(request, 'Üzgünüz, yarışma kontenjanı dolu!')
+        
+        elif 'submit' in request.POST and 'submission' in request.FILES:
+            # Proje gönderme işlemi
+            participant = CompetitionParticipant.objects.get(
+                competition=competition,
+                user=request.user
+            )
+            participant.submission = request.FILES['submission']
+            participant.submission_date = timezone.now()
+            participant.save()
+            messages.success(request, 'Projeniz başarıyla gönderildi!')
+            return redirect('app:competition_detail', slug=slug)
+    
+    context = {
+        'competition': competition,
+        'is_participant': is_participant,
+        'announcements': CompetitionAnnouncement.objects.filter(competition=competition).order_by('-created_at'),
+    }
+    return render(request, 'app/competition_detail.html', context)
+
+@login_required
+def edit_competition(request, slug):
+    competition = get_object_or_404(Competition, slug=slug)
+    
+    # Yetki kontrolü - sadece organizatör veya admin düzenleyebilir
+    if request.user != competition.organizer and not request.user.is_staff:
+        messages.error(request, 'Bu yarışmayı düzenleme yetkiniz bulunmamaktadır.')
+        return redirect('app:competition_detail', slug=slug)
+    
+    if request.method == 'POST':
+        # Form verilerini al
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        category = request.POST.get('category')
+        level = request.POST.get('level')
+        prize = request.POST.get('prize')
+        max_participants = request.POST.get('max_participants')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        registration_deadline = request.POST.get('registration_deadline')
+        
+        # Yarışmayı güncelle
+        competition.title = title
+        competition.description = description
+        competition.category = category
+        competition.level = level
+        competition.prize = prize
+        competition.max_participants = max_participants
+        competition.start_date = start_date
+        competition.end_date = end_date
+        competition.registration_deadline = registration_deadline
+        
+        # Eğer yeni bir resim yüklendiyse
+        if 'image' in request.FILES:
+            competition.image = request.FILES['image']
+        
+        competition.save()
+        
+        messages.success(request, 'Yarışma başarıyla güncellendi!')
+        return redirect('app:competition_detail', slug=competition.slug)
+    
+    context = {
+        'competition': competition,
+    }
+    return render(request, 'app/edit_competition.html', context)
+
+@login_required
+def delete_competition(request, slug):
+    competition = get_object_or_404(Competition, slug=slug)
+    
+    # Yetki kontrolü - sadece organizatör veya admin silebilir
+    if request.user != competition.organizer and not request.user.is_staff:
+        messages.error(request, 'Bu yarışmayı silme yetkiniz bulunmamaktadır.')
+        return redirect('app:competition_detail', slug=slug)
+    
+    if request.method == 'POST':
+        competition.delete()
+        messages.success(request, 'Yarışma başarıyla silindi!')
+        return redirect('app:yarisma')
+    
+    return redirect('app:manage_competitions')

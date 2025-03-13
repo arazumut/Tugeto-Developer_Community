@@ -1,0 +1,150 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Yarışma Düzenle - {{ competition.title }} - Tugeto{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    .edit-competition-header {
+        background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+        color: white;
+        padding: 6rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <!-- Başlık -->
+    <section class="edit-competition-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-4 fw-bold mb-4">Yarışma Düzenle</h1>
+                    <p class="lead mb-0">{{ competition.title }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                
+                                <!-- Temel Bilgiler -->
+                                <h4 class="mb-4">Temel Bilgiler</h4>
+                                <div class="mb-4">
+                                    <label class="form-label">Yarışma Başlığı</label>
+                                    <input type="text" name="title" class="form-control" value="{{ competition.title }}" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label">Açıklama</label>
+                                    <textarea name="description" class="form-control" rows="5" required>{{ competition.description }}</textarea>
+                                </div>
+                                
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Kategori</label>
+                                        <select name="category" class="form-select" required>
+                                            <option value="">Seçiniz</option>
+                                            <option value="web" {% if competition.category == 'web' %}selected{% endif %}>Web Geliştirme</option>
+                                            <option value="ai" {% if competition.category == 'ai' %}selected{% endif %}>Yapay Zeka</option>
+                                            <option value="game" {% if competition.category == 'game' %}selected{% endif %}>Oyun Geliştirme</option>
+                                            <option value="mobile" {% if competition.category == 'mobile' %}selected{% endif %}>Mobil Uygulama</option>
+                                            <option value="other" {% if competition.category == 'other' %}selected{% endif %}>Diğer</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Seviye</label>
+                                        <select name="level" class="form-select" required>
+                                            <option value="">Seçiniz</option>
+                                            <option value="beginner" {% if competition.level == 'beginner' %}selected{% endif %}>Başlangıç</option>
+                                            <option value="intermediate" {% if competition.level == 'intermediate' %}selected{% endif %}>Orta</option>
+                                            <option value="advanced" {% if competition.level == 'advanced' %}selected{% endif %}>İleri</option>
+                                            <option value="all" {% if competition.level == 'all' %}selected{% endif %}>Tüm Seviyeler</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Ödül ve Katılımcı Bilgileri -->
+                                <h4 class="mb-4">Ödül ve Katılımcı Bilgileri</h4>
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Ödül Miktarı (₺)</label>
+                                        <input type="number" name="prize" class="form-control" value="{{ competition.prize }}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Maksimum Katılımcı Sayısı</label>
+                                        <input type="number" name="max_participants" class="form-control" value="{{ competition.max_participants }}" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tarih Bilgileri -->
+                                <h4 class="mb-4">Tarih Bilgileri</h4>
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Başlangıç Tarihi</label>
+                                        <input type="datetime-local" name="start_date" class="form-control flatpickr" value="{{ competition.start_date|date:'Y-m-d H:i' }}" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Bitiş Tarihi</label>
+                                        <input type="datetime-local" name="end_date" class="form-control flatpickr" value="{{ competition.end_date|date:'Y-m-d H:i' }}" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Son Kayıt Tarihi</label>
+                                        <input type="datetime-local" name="registration_deadline" class="form-control flatpickr" value="{{ competition.registration_deadline|date:'Y-m-d H:i' }}" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- Görsel -->
+                                <h4 class="mb-4">Yarışma Görseli</h4>
+                                <div class="mb-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Mevcut Görsel</label>
+                                        <div>
+                                            <img src="{{ competition.image.url }}" alt="{{ competition.title }}" class="img-thumbnail" style="max-height: 200px;">
+                                        </div>
+                                    </div>
+                                    <input type="file" name="image" class="form-control" accept="image/*">
+                                    <small class="text-muted">Yeni bir görsel yüklemek isterseniz seçin, aksi halde mevcut görsel kullanılacaktır.</small>
+                                </div>
+                                
+                                <!-- Gönder Butonu -->
+                                <div class="text-end">
+                                    <a href="{% url 'app:competition_detail' competition.slug %}" class="btn btn-secondary me-2">
+                                        <i class="fas fa-times me-2"></i>İptal
+                                    </a>
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(".flatpickr", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minDate: "today"
+        });
+    });
+</script>
+{% endblock %} 
