@@ -1,3 +1,6 @@
+#Author : K. Umut Araz
+#Date : 13.03.2025 ö3.08am
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import (
@@ -21,7 +24,6 @@ class ForumTopicAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'category', 'created_at', 'views', 'is_pinned', 'is_closed')
     list_filter = ('category', 'is_pinned', 'is_closed', 'created_at')
     search_fields = ('title', 'content', 'author__username')
-    prepopulated_fields = {'slug': ('title',)}
 
 class ForumCommentAdmin(admin.ModelAdmin):
     list_display = ('topic', 'author', 'created_at', 'is_solution')

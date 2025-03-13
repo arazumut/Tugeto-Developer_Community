@@ -1,0 +1,242 @@
+<!--
+Author : K. Umut Araz
+Date : 13.03.2025 ö3.08am
+-->
+
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Yeni Konu Oluştur - Forum - Tugeto{% endblock %}
+
+{% block extra_css %}
+<style>
+    .create-topic-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .breadcrumb-item a {
+        color: #6e8efb;
+    }
+    
+    .create-topic-card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .create-topic-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .create-topic-header h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .create-topic-header p {
+        color: #6c757d;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    
+    .form-control:focus {
+        border-color: #6e8efb;
+        box-shadow: 0 0 0 0.2rem rgba(110, 142, 251, 0.25);
+    }
+    
+    .form-text {
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+    
+    .topic-content-editor {
+        min-height: 300px;
+    }
+    
+    .btn-primary {
+        background: #6e8efb;
+        border-color: #6e8efb;
+        padding: 0.5rem 1.5rem;
+    }
+    
+    .btn-primary:hover {
+        background: #5a7df9;
+        border-color: #5a7df9;
+    }
+    
+    .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .guidelines-card {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .guidelines-card h3 {
+        font-size: 1.25rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    
+    .guidelines-card ul {
+        padding-left: 1.5rem;
+        margin-bottom: 0;
+    }
+    
+    .guidelines-card li {
+        margin-bottom: 0.5rem;
+        color: #495057;
+    }
+    
+    @media (max-width: 768px) {
+        .create-topic-card {
+            padding: 1.5rem;
+        }
+        
+        .create-topic-header h1 {
+            font-size: 1.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="create-topic-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app:index' %}">Ana Sayfa</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'app:forum' %}">Forum</a></li>
+            {% if selected_category %}
+            <li class="breadcrumb-item"><a href="{% url 'app:forum_category' selected_category.slug %}">{{ selected_category.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">Yeni Konu</li>
+        </ol>
+    </nav>
+    
+    <div class="create-topic-card">
+        <div class="create-topic-header">
+            <h1>Yeni Konu Oluştur</h1>
+            <p>Topluluğumuzla bilgi paylaşın, soru sorun veya tartışma başlatın.</p>
+        </div>
+        
+        <form method="POST" action="{% url 'app:create_topic' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="title" class="form-label">Konu Başlığı</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Konunuzun başlığını girin" required>
+                <small class="form-text">Açıklayıcı ve kısa bir başlık seçin (5-100 karakter).</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="category" class="form-label">Kategori</label>
+                <select class="form-select form-control" id="category" name="category" required>
+                    <option value="" disabled {% if not selected_category %}selected{% endif %}>Kategori seçin</option>
+                    
+                    {% for category in categories %}
+                        {% if not category.parent %}
+                            <optgroup label="{{ category.name }}">
+                                <!-- Ana kategori olarak seçilebilir -->
+                                <option value="{{ category.id }}" {% if selected_category and selected_category.id == category.id %}selected{% endif %}>
+                                    {{ category.name }} (Genel)
+                                </option>
+                                
+                                <!-- Alt kategoriler -->
+                                {% for subcategory in categories %}
+                                    {% if subcategory.parent and subcategory.parent.id == category.id %}
+                                        <option value="{{ subcategory.id }}" {% if selected_category and selected_category.id == subcategory.id %}selected{% endif %}>
+                                            {{ subcategory.name }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </optgroup>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <small class="form-text">Konunuzun içeriğine en uygun kategoriyi seçin. Ana kategoriler genel konular için, alt kategoriler daha spesifik konular içindir.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="content" class="form-label">İçerik</label>
+                <textarea class="form-control topic-content-editor" id="content" name="content" rows="10" placeholder="Konunuzun içeriğini buraya yazın..." required></textarea>
+                <small class="form-text">Konunuzu detaylı bir şekilde açıklayın. Kod blokları için ``` işaretlerini kullanabilirsiniz.</small>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% if selected_category %}{% url 'app:forum_category' selected_category.slug %}{% else %}{% url 'app:forum' %}{% endif %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Vazgeç
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Konuyu Oluştur
+                </button>
+            </div>
+        </form>
+        
+        <div class="guidelines-card">
+            <h3><i class="fas fa-info-circle"></i> Forum Kuralları</h3>
+            <ul>
+                <li>Saygılı ve yapıcı bir dil kullanın.</li>
+                <li>Konunuzu doğru kategoriye ekleyin.</li>
+                <li>Başlık ve içerikte açık ve net olun.</li>
+                <li>Tekrar eden konular açmaktan kaçının, önce arama yapın.</li>
+                <li>Telif hakkı ihlali içeren içerikler paylaşmayın.</li>
+                <li>Kişisel bilgilerinizi paylaşmaktan kaçının.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Form gönderilmeden önce kontrol
+    document.querySelector('form').addEventListener('submit', function(e) {
+        var title = document.getElementById('title').value;
+        var content = document.getElementById('content').value;
+        
+        if (title.length < 5) {
+            e.preventDefault();
+            alert('Başlık en az 5 karakter olmalıdır.');
+            return false;
+        }
+        
+        if (content.length < 20) {
+            e.preventDefault();
+            alert('İçerik en az 20 karakter olmalıdır.');
+            return false;
+        }
+        
+        return true;
+    });
+</script>
+{% endblock %} 

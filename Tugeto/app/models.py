@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class User(AbstractUser):
     """
@@ -35,15 +37,45 @@ class Skill(models.Model):
     def __str__(self):
         return self.name
 
+class Profile(models.Model):
+    USER_TYPE_CHOICES = [
+        ('P', 'Programcı'),
+        ('M', 'Mühendis'),
+        ('D', 'Diğer'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES, default='P')
+    bio = models.TextField(max_length=500, blank=True)
+    location = models.CharField(max_length=30, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    skills = models.ManyToManyField(Skill, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
 class ForumCategory(models.Model):
     """
     Forum kategorileri.
     """
     name = models.CharField(max_length=100)
-    description = models.TextField()
-    icon = models.CharField(max_length=50, blank=True, null=True)  # Font Awesome icon class
+    description = models.TextField(blank=True)
+    icon = models.CharField(max_length=50, default="fas fa-folder", help_text="Font Awesome icon class")
     slug = models.SlugField(unique=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategories')
+    order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -54,7 +86,17 @@ class ForumCategory(models.Model):
         return self.name
     
     class Meta:
-        verbose_name_plural = "Forum Kategorileri"
+        verbose_name_plural = "Forum Categories"
+        ordering = ['order', 'name']
+    
+    def get_topic_count(self):
+        return self.topics.count()
+    
+    def get_post_count(self):
+        count = 0
+        for topic in self.topics.all():
+            count += topic.comments.count() + 1  # +1 for the topic itself
+        return count
 
 class ForumTopic(models.Model):
     """
@@ -62,40 +104,39 @@ class ForumTopic(models.Model):
     """
     title = models.CharField(max_length=200)
     content = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='forum_topics')
     category = models.ForeignKey(ForumCategory, on_delete=models.CASCADE, related_name='topics')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='forum_topics')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     views = models.PositiveIntegerField(default=0)
     is_pinned = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
-    slug = models.SlugField(unique=True)
     
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
+    class Meta:
+        ordering = ['-is_pinned', '-created_at']
     
     def __str__(self):
         return self.title
+    
+    def get_comment_count(self):
+        return self.comments.count()
+    
+    def get_last_comment(self):
+        return self.comments.order_by('-created_at').first()
 
-class ForumComment(MPTTModel):
-    """
-    Forum yorumları. MPTT modeli kullanarak ağaç yapısı oluşturur.
-    """
+class ForumComment(models.Model):
     topic = models.ForeignKey(ForumTopic, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='forum_comments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     is_solution = models.BooleanField(default=False)
     
-    class MPTTMeta:
-        order_insertion_by = ['created_at']
+    class Meta:
+        ordering = ['created_at']
     
     def __str__(self):
-        return f"Yorum: {self.content[:50]}..."
+        return f"Comment by {self.author.username} on {self.topic.title}"
 
 class CompetitionCategory(models.Model):
     """

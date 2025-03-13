@@ -1,3 +1,8 @@
+<!--
+Author : K. Umut Araz
+Date : 13.03.2025 ö3.08am
+-->
+
 {% extends 'app/base.html' %}
 
 {% load static %}
@@ -10,7 +15,7 @@
     .profile-header {
         background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
         color: white;
-        padding: 3rem 0;
+        padding: 7rem 0;
         margin-bottom: 2rem;
         position: relative;
     }
@@ -439,68 +444,104 @@
                 <!-- Profil Ayarları -->
                 <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
                     <div class="row mt-4">
-                        <div class="col-lg-8 mx-auto">
+                        <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-user-edit me-2"></i>Profil Bilgilerini Düzenle</h5>
+                                    <h5 class="mb-0"><i class="fas fa-user-edit me-2"></i>Profil Düzenle</h5>
                                 </div>
                                 <div class="card-body">
-                                    <form action="{% url 'app:profile' %}" method="POST" enctype="multipart/form-data">
+                                    <form method="POST" action="{% url 'app:update_profile' %}" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         
-                                        <div class="mb-3">
-                                            <label for="id_avatar" class="form-label">Profil Fotoğrafı</label>
-                                            <input type="file" class="form-control" id="id_avatar" name="avatar">
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label for="id_first_name" class="form-label">Ad</label>
-                                                <input type="text" class="form-control" id="id_first_name" name="first_name" value="{{ user.first_name }}">
+                                        <!-- Profil Fotoğrafı -->
+                                        <div class="mb-4">
+                                            <label class="form-label">Profil Fotoğrafı</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3">
+                                                    {% if user.profile.avatar %}
+                                                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                                    {% else %}
+                                                        <img src="{% static 'app/img/default-avatar.png' %}" alt="{{ user.username }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    <input type="file" name="avatar" class="form-control" accept="image/*">
+                                                    <small class="text-muted">Önerilen boyut: 500x500 piksel. Maksimum dosya boyutu: 2MB</small>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label for="id_last_name" class="form-label">Soyad</label>
-                                                <input type="text" class="form-control" id="id_last_name" name="last_name" value="{{ user.last_name }}">
-                                            </div>
+                                        </div>
+
+                                        <!-- Kişisel Bilgiler -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Ad</label>
+                                            <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}" required>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="id_email" class="form-label">E-posta</label>
-                                            <input type="email" class="form-control" id="id_email" name="email" value="{{ user.email }}">
+                                            <label class="form-label">Soyad</label>
+                                            <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}" required>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="id_bio" class="form-label">Biyografi</label>
-                                            <textarea class="form-control" id="id_bio" name="bio" rows="4">{{ user.profile.bio }}</textarea>
+                                            <label class="form-label">E-posta</label>
+                                            <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="id_location" class="form-label">Konum</label>
-                                            <input type="text" class="form-control" id="id_location" name="location" value="{{ user.profile.location }}">
+                                            <label class="form-label">Hakkımda</label>
+                                            <textarea name="bio" class="form-control" rows="4">{{ user.profile.bio }}</textarea>
+                                        </div>
+                                        
+                                        <!-- Sosyal Medya Bağlantıları -->
+                                        <div class="mb-3">
+                                            <label class="form-label">GitHub URL</label>
+                                            <input type="url" name="github_url" class="form-control" value="{{ user.profile.github_url }}">
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="id_website" class="form-label">Web Sitesi</label>
-                                            <input type="url" class="form-control" id="id_website" name="website" value="{{ user.profile.website }}">
+                                            <label class="form-label">LinkedIn URL</label>
+                                            <input type="url" name="linkedin_url" class="form-control" value="{{ user.profile.linkedin_url }}">
                                         </div>
                                         
                                         <div class="mb-3">
-                                            <label for="id_user_type" class="form-label">Kullanıcı Tipi</label>
-                                            <select class="form-select" id="id_user_type" name="user_type">
-                                                <option value="student" {% if user.profile.user_type == 'student' %}selected{% endif %}>Öğrenci</option>
-                                                <option value="developer" {% if user.profile.user_type == 'developer' %}selected{% endif %}>Geliştirici</option>
-                                                <option value="instructor" {% if user.profile.user_type == 'instructor' %}selected{% endif %}>Eğitmen</option>
-                                                <option value="company" {% if user.profile.user_type == 'company' %}selected{% endif %}>Şirket</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="id_skills" class="form-label">Yetenekler (virgülle ayırın)</label>
-                                            <input type="text" class="form-control" id="id_skills" name="skills" value="{% for skill in user.skills.all %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                                            <label class="form-label">Web Sitesi URL</label>
+                                            <input type="url" name="website_url" class="form-control" value="{{ user.profile.website_url }}">
                                         </div>
                                         
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-save me-1"></i> Değişiklikleri Kaydet
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Şifre Değiştirme -->
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-key me-2"></i>Şifre Değiştir</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="{% url 'app:change_password' %}">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label class="form-label">Mevcut Şifre</label>
+                                            <input type="password" name="current_password" class="form-control" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Yeni Şifre</label>
+                                            <input type="password" name="new_password1" class="form-control" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Yeni Şifre (Tekrar)</label>
+                                            <input type="password" name="new_password2" class="form-control" required>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-warning">
+                                            <i class="fas fa-key me-1"></i> Şifreyi Değiştir
                                         </button>
                                     </form>
                                 </div>

@@ -1,0 +1,186 @@
+<!--
+Author : K. Umut Araz
+Date : 13.03.2025 ö3.08am
+-->
+
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Yorum Düzenle - Forum - Tugeto{% endblock %}
+
+{% block extra_css %}
+<style>
+    .edit-comment-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .breadcrumb-item a {
+        color: #6e8efb;
+    }
+    
+    .edit-comment-card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .edit-comment-header {
+        margin-bottom: 2rem;
+    }
+    
+    .edit-comment-header h1 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .edit-comment-header p {
+        color: #6c757d;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    
+    .form-control:focus {
+        border-color: #6e8efb;
+        box-shadow: 0 0 0 0.2rem rgba(110, 142, 251, 0.25);
+    }
+    
+    .form-text {
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+    
+    .comment-editor {
+        min-height: 200px;
+    }
+    
+    .btn-primary {
+        background: #6e8efb;
+        border-color: #6e8efb;
+        padding: 0.5rem 1.5rem;
+    }
+    
+    .btn-primary:hover {
+        background: #5a7df9;
+        border-color: #5a7df9;
+    }
+    
+    .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .topic-preview {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .topic-preview h3 {
+        font-size: 1.25rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .topic-preview p {
+        color: #6c757d;
+        margin-bottom: 0;
+        font-style: italic;
+    }
+    
+    @media (max-width: 768px) {
+        .edit-comment-card {
+            padding: 1.5rem;
+        }
+        
+        .edit-comment-header h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="edit-comment-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app:index' %}">Ana Sayfa</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'app:forum' %}">Forum</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'app:forum_category' comment.topic.category.slug %}">{{ comment.topic.category.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'app:forum_topic' comment.topic.id %}">{{ comment.topic.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Yorum Düzenle</li>
+        </ol>
+    </nav>
+    
+    <div class="edit-comment-card">
+        <div class="edit-comment-header">
+            <h1>Yorum Düzenle</h1>
+            <p>Yorumunuzu düzenleyin ve güncelleyin.</p>
+        </div>
+        
+        <div class="topic-preview">
+            <h3>Konu: {{ comment.topic.title }}</h3>
+            <p>{{ comment.topic.content|truncatechars:150 }}</p>
+        </div>
+        
+        <form method="POST" action="{% url 'app:edit_comment' comment.id %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="content" class="form-label">Yorum İçeriği</label>
+                <textarea class="form-control comment-editor" id="content" name="content" rows="8" required>{{ comment.content }}</textarea>
+                <small class="form-text">Yorumunuzu düzenleyin. Kod blokları için ``` işaretlerini kullanabilirsiniz.</small>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'app:forum_topic' comment.topic.id %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Vazgeç
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Yorumu Güncelle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Form gönderilmeden önce kontrol
+    document.querySelector('form').addEventListener('submit', function(e) {
+        var content = document.getElementById('content').value;
+        
+        if (content.length < 5) {
+            e.preventDefault();
+            alert('Yorum içeriği en az 5 karakter olmalıdır.');
+            return false;
+        }
+        
+        return true;
+    });
+</script>
+{% endblock %} 

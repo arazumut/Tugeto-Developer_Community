@@ -1,401 +1,397 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum - Tugeto</title>
-    {% load static %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'app/css/forum.style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-</head>
-<body class="font-monospace bg-light">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{% url 'app:index' %}">
-            <img src="{% static 'app/assets/Adsız_tasarım-removebg-preview.png' %}" alt="Tugeto Logo" height="30" class="d-inline-block align-text-top me-2">
-            Tugeto
-        </a>
+<!--
+Author : K. Umut Araz
+Date : 13.03.2025 ö3.08am
+-->
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+{% extends 'app/base.html' %}
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="{% url 'app:index' %}">
-                        <i class="fas fa-home me-1"></i>
-                        Ana Sayfa
-                    </a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link active" href="{% url 'app:forum' %}">
-                        <i class="fas fa-comments me-1"></i>
-                        Forum
-                    </a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="{% url 'app:yarisma' %}">
-                        <i class="fas fa-trophy me-1"></i>
-                        Yarışmalar
-                    </a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="{% url 'app:hakkimizda' %}">
-                        <i class="fas fa-info-circle me-1"></i>
-                        Hakkımızda
-                    </a>
-                </li>
-                <li class="nav-item mx-2">
-                    <a class="nav-link" href="{% url 'app:iletisim' %}">
-                        <i class="fas fa-envelope me-1"></i>
-                        İletişim
-                    </a>
-                </li>
-            </ul>
+{% load static %}
 
-            <div class="d-flex">
-                <a class="btn btn-outline-light me-2" href="{% url 'app:login' %}">
-                    <i class="fas fa-sign-in-alt me-1"></i>
-                    Giriş Yap
-                </a>
-                <a class="btn btn-outline-light" href="{% url 'app:register' %}">
-                    <i class="fas fa-user-plus me-1"></i>
-                    Kayıt Ol
-                </a>
+{% block title %}Forum - Tugeto{% endblock %}
+
+{% block extra_css %}
+<style>
+    .forum-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .forum-header {
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        color: white;
+        padding: 3rem 1rem;
+        text-align: center;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .forum-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .forum-header p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .forum-search {
+        margin-bottom: 2rem;
+    }
+    
+    .forum-search form {
+        display: flex;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .forum-search input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px 0 0 5px;
+        font-size: 1rem;
+    }
+    
+    .forum-search button {
+        background: #6e8efb;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+    }
+    
+    .forum-search button:hover {
+        background: #5a7df9;
+    }
+    
+    .forum-categories {
+        margin-bottom: 2rem;
+    }
+    
+    .category-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .category-icon {
+        width: 40px;
+        height: 40px;
+        background: #f0f4ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        color: #6e8efb;
+    }
+    
+    .category-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .category-description {
+        color: #666;
+        margin-bottom: 1rem;
+    }
+    
+    .category-stats {
+        display: flex;
+        color: #888;
+        font-size: 0.9rem;
+    }
+    
+    .category-stats div {
+        margin-right: 1.5rem;
+    }
+    
+    .category-stats i {
+        margin-right: 0.5rem;
+    }
+    
+    .recent-topics, .popular-topics {
+        margin-bottom: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+        border-bottom: 2px solid #f0f4ff;
+        padding-bottom: 0.5rem;
+    }
+    
+    .topic-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+    
+    .topic-item:hover {
+        transform: translateX(5px);
+    }
+    
+    .topic-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        object-fit: cover;
+    }
+    
+    .topic-content {
+        flex: 1;
+    }
+    
+    .topic-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: #333;
+    }
+    
+    .topic-meta {
+        font-size: 0.85rem;
+        color: #888;
+    }
+    
+    .topic-meta span {
+        margin-right: 1rem;
+    }
+    
+    .topic-stats {
+        display: flex;
+        align-items: center;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        margin-left: 1.5rem;
+        color: #666;
+    }
+    
+    .stat-item i {
+        margin-right: 0.5rem;
+    }
+    
+    .create-topic-btn {
+        display: inline-block;
+        background: #6e8efb;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.3s;
+        margin-top: 1rem;
+    }
+    
+    .create-topic-btn:hover {
+        background: #5a7df9;
+        text-decoration: none;
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .forum-header h1 {
+            font-size: 2rem;
+        }
+        
+        .forum-header p {
+            font-size: 1rem;
+        }
+        
+        .topic-stats {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="forum-container">
+    <div class="forum-header">
+        <h1>Tugeto Forum</h1>
+        <p>Bilgi paylaşımı, soru-cevap ve tartışmalar için topluluğumuza katılın. Yeni konular oluşturun veya mevcut tartışmalara katkıda bulunun.</p>
             </div>
-        </div>
+    
+    <div class="forum-search">
+        <form action="{% url 'app:search_forum' %}" method="GET">
+            <input type="text" name="q" placeholder="Forum içinde ara..." required>
+            <button type="submit"><i class="fas fa-search"></i> Ara</button>
+        </form>
     </div>
-</nav>
+    
+    <div class="forum-categories">
+        <h2 class="section-title">Kategoriler</h2>
 
-    <!-- Hero Bölümü -->
-    <section class="forum-hero">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
-                    <h1 class="display-3 fw-bold mb-4">Topluluk Forumu</h1>
-                    <p class="lead mb-4 text-primary">Sorularınızı sorun, bilgi paylaşın ve teknoloji dünyasındaki diğer geliştiricilerle bağlantı kurun</p>
-                </div>
-            </div>
-        </div>
-        <div class="forum-hero-wave">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#f8f9fa" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
-        </div>
-    </section>
-
-    <!-- Forum Container -->
-    <div class="container forum-container">
         <div class="row">
-            <!-- Sol Sidebar - Kategoriler -->
-            <div class="col-lg-3">
-                <div class="category-sidebar shadow-sm mb-4" data-aos="fade-right">
-                    <div class="accordion" id="categoryAccordion">
-                        <div class="accordion-item border-0">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#programmingCollapse">
-                                    <i class="fas fa-code me-2"></i>Programlama
-                                </button>
-                            </h2>
-                            <div id="programmingCollapse" class="accordion-collapse collapse show">
-                                <div class="list-group list-group-flush">
-                                    <div class="list-group-item">
-                                        <a href="#" class="d-flex justify-content-between align-items-center text-decoration-none">
-                                            Web Geliştirme
-                                            <span class="badge bg-primary rounded-pill">14</span>
-                                        </a>
-                                    </div>
-                                    <div class="list-group-item">
-                                        <a href="#" class="d-flex justify-content-between align-items-center text-decoration-none">
-                                            Mobil Uygulama
-                                            <span class="badge bg-primary rounded-pill">8</span>
-                                        </a>
-                                    </div>
-                                    <div class="list-group-item">
-                                        <a href="#" class="d-flex justify-content-between align-items-center text-decoration-none">
-                                            Yapay Zeka
-                                            <span class="badge bg-primary rounded-pill">21</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+            {% for category in categories %}
+            <div class="col-md-6 mb-4">
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">
+                            <i class="{{ category.icon|default:'fas fa-folder' }}"></i>
                         </div>
-                        
-                        <div class="accordion-item border-0">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#engineeringCollapse">
-                                    <i class="fas fa-cogs me-2"></i>Mühendislik
-                                </button>
-                            </h2>
-                            <div id="engineeringCollapse" class="accordion-collapse collapse">
-                                <div class="list-group list-group-flush">
-                                    <div class="list-group-item">
-                                        <a href="#" class="d-flex justify-content-between align-items-center text-decoration-none">
-                                            Elektronik
-                                            <span class="badge bg-primary rounded-pill">6</span>
-                                        </a>
-                                    </div>
-                                    <div class="list-group-item">
-                                        <a href="#" class="d-flex justify-content-between align-items-center text-decoration-none">
-                                            Mekanik
-                                            <span class="badge bg-primary rounded-pill">4</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="accordion-item border-0">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#generalCollapse">
-                                    <i class="fas fa-globe me-2"></i>Genel Konular
-                                </button>
-                            </h2>
-                            <div id="generalCollapse" class="accordion-collapse collapse">
-                                <div class="list-group list-group-flush">
-                                    <div class="list-group-item">
-                                        <a href="#" class="d-flex justify-content-between align-items-center text-decoration-none">
-                                            Kariyer Tavsiyeleri
-                                            <span class="badge bg-primary rounded-pill">12</span>
-                                        </a>
-                                    </div>
-                                    <div class="list-group-item">
-                                        <a href="#" class="d-flex justify-content-between align-items-center text-decoration-none">
-                                            Teknoloji Haberleri
-                                            <span class="badge bg-primary rounded-pill">9</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h3 class="category-title">
+                            <a href="{% url 'app:forum_category' category.slug %}">{{ category.name }}</a>
+                        </h3>
                     </div>
-                </div>
-            </div>
-
-            <!-- Ana İçerik -->
-            <div class="col-lg-6">
-                <!-- Arama ve Yeni Konu -->
-                <div class="forum-actions d-flex justify-content-between align-items-center mb-4" data-aos="fade-up">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Forum'da ara...">
-                        <button class="btn btn-outline-primary" type="button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Yeni Konu
-                    </button>
-                </div>
-
-                <!-- Forum Konuları -->
-                <div class="forum-topics">
-                    <!-- Konu 1 -->
-                    <div class="forum-topic card shadow-sm" data-aos="fade-up" data-aos-delay="100">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <span class="badge bg-primary">Web Geliştirme</span>
-                            <small class="text-muted">2 saat önce</small>
+                    <p class="category-description">{{ category.description }}</p>
+                    <div class="category-stats">
+                        <div>
+                            <i class="fas fa-file-alt"></i> {{ category.get_topic_count }} Konu
                         </div>
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="User Avatar" class="user-avatar me-3">
-                                <div>
-                                    <h5 class="card-title mb-1">React vs Vue.js - Hangisini Öğrenmeliyim?</h5>
-                                    <p class="card-text text-muted mb-2">Frontend framework seçiminde kararsızım. Deneyimlerinizi paylaşır mısınız?</p>
-                                    <div class="d-flex align-items-center">
-                                        <small class="text-primary me-3">@ahmetyilmaz</small>
-                                        <small class="text-muted me-3"><i class="fas fa-comment-alt me-1"></i>23 yanıt</small>
-                                        <small class="text-muted"><i class="fas fa-eye me-1"></i>156 görüntülenme</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Konu 2 -->
-                    <div class="forum-topic card shadow-sm" data-aos="fade-up" data-aos-delay="200">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <span class="badge bg-success">Yapay Zeka</span>
-                            <small class="text-muted">5 saat önce</small>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <img src="https://randomuser.me/api/portraits/women/31.jpg" alt="User Avatar" class="user-avatar me-3">
-                                <div>
-                                    <h5 class="card-title mb-1">Python ile Görüntü İşleme Projesi</h5>
-                                    <p class="card-text text-muted mb-2">OpenCV kullanarak yüz tanıma sistemi geliştiriyorum. Önerileriniz var mı?</p>
-                                    <div class="d-flex align-items-center">
-                                        <small class="text-primary me-3">@zeynepkaya</small>
-                                        <small class="text-muted me-3"><i class="fas fa-comment-alt me-1"></i>15 yanıt</small>
-                                        <small class="text-muted"><i class="fas fa-eye me-1"></i>98 görüntülenme</small>
-                                    </div>
-                                </div>
-                            </div>
+                        <div>
+                            <i class="fas fa-comments"></i> {{ category.get_post_count }} Yorum
                         </div>
                     </div>
                     
-                    <!-- Konu 3 -->
-                    <div class="forum-topic card shadow-sm" data-aos="fade-up" data-aos-delay="300">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <span class="badge bg-danger">Mobil Uygulama</span>
-                            <small class="text-muted">1 gün önce</small>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User Avatar" class="user-avatar me-3">
-                                <div>
-                                    <h5 class="card-title mb-1">Flutter vs React Native Performans Karşılaştırması</h5>
-                                    <p class="card-text text-muted mb-2">Yeni bir mobil uygulama geliştirmeye başlayacağım. Hangi framework daha iyi performans sağlar?</p>
-                                    <div class="d-flex align-items-center">
-                                        <small class="text-primary me-3">@emredemir</small>
-                                        <small class="text-muted me-3"><i class="fas fa-comment-alt me-1"></i>32 yanıt</small>
-                                        <small class="text-muted"><i class="fas fa-eye me-1"></i>215 görüntülenme</small>
-                                    </div>
-                                </div>
+                    <!-- Alt kategoriler -->
+                    {% if category.subcategories.all %}
+                    <div class="subcategories mt-3">
+                        <div class="subcategory-list">
+                            <strong><i class="fas fa-sitemap"></i> Alt Kategoriler:</strong>
+                            <div class="d-flex flex-wrap mt-2">
+                                {% for subcategory in category.subcategories.all %}
+                                <a href="{% url 'app:forum_category' subcategory.slug %}" class="badge bg-light text-dark me-2 mb-2 p-2">
+                                    <i class="{{ subcategory.icon|default:'fas fa-folder' }}"></i> {{ subcategory.name }}
+                                </a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Sayfalama -->
-                <nav aria-label="Forum sayfaları" class="mt-4" data-aos="fade-up">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Önceki</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Sonraki</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Sağ Sidebar -->
-            <div class="col-lg-3">
-                <!-- Forum İstatistikleri -->
-                <div class="stats-card shadow-sm" data-aos="fade-left">
-                    <h5 class="mb-4">Forum İstatistikleri</h5>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-users stats-icon"></i>
-                        <div>
-                            <h6 class="mb-0">1,234</h6>
-                            <small class="text-white-50">Toplam Üye</small>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-comments stats-icon"></i>
-                        <div>
-                            <h6 class="mb-0">5,678</h6>
-                            <small class="text-white-50">Toplam Konu</small>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-reply stats-icon"></i>
-                        <div>
-                            <h6 class="mb-0">12,345</h6>
-                            <small class="text-white-50">Toplam Yanıt</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Popüler Konular -->
-                <div class="right-sidebar shadow-sm" data-aos="fade-left" data-aos-delay="100">
-                    <h5 class="mb-4">Popüler Konular</h5>
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item">
-                            <h6 class="mb-1">Yapay Zeka ve Etik Tartışmalar</h6>
-                            <small class="text-muted">14 yeni yanıt</small>
-                        </div>
-                        <div class="list-group-item">
-                            <h6 class="mb-1">Yeni Nesil Web Teknolojileri</h6>
-                            <small class="text-muted">8 yeni yanıt</small>
-                        </div>
-                        <div class="list-group-item">
-                            <h6 class="mb-1">Siber Güvenlik İpuçları</h6>
-                            <small class="text-muted">6 yeni yanıt</small>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Aktif Kullanıcılar -->
-                <div class="right-sidebar shadow-sm" data-aos="fade-left" data-aos-delay="200">
-                    <h5 class="mb-4">Aktif Kullanıcılar</h5>
-                    <div class="d-flex flex-wrap gap-2 justify-content-center">
-                        <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="User" class="rounded-circle" width="40" height="40" data-bs-toggle="tooltip" title="@ahmetyilmaz">
-                        <img src="https://randomuser.me/api/portraits/women/31.jpg" alt="User" class="rounded-circle" width="40" height="40" data-bs-toggle="tooltip" title="@zeynepkaya">
-                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User" class="rounded-circle" width="40" height="40" data-bs-toggle="tooltip" title="@emredemir">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="rounded-circle" width="40" height="40" data-bs-toggle="tooltip" title="@ayseozturk">
-                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="User" class="rounded-circle" width="40" height="40" data-bs-toggle="tooltip" title="@mehmetcan">
-                        <img src="https://randomuser.me/api/portraits/women/67.jpg" alt="User" class="rounded-circle" width="40" height="40" data-bs-toggle="tooltip" title="@elifkara">
-                        <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="User" class="rounded-circle" width="40" height="40" data-bs-toggle="tooltip" title="@alitoprak">
-                        <img src="https://randomuser.me/api/portraits/women/89.jpg" alt="User" class="rounded-circle" width="40" height="40" data-bs-toggle="tooltip" title="@selinaydin">
-                    </div>
+                    {% endif %}
                 </div>
             </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Henüz hiç kategori oluşturulmamış.
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer mt-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 mb-4">
-                <img src="{% static 'app/assets/Adsız_tasarım-removebg-preview.png' %}" alt="Tugeto Logo" height="50">
-                <p class="mt-3">Yazılım dünyasında yenilikçi fikirleri destekleyen ve geliştiren topluluk platformu.</p>
-            </div>
-            <div class="col-lg-4 mb-4">
-                <h5>Hızlı Bağlantılar</h5>
-                <ul class="list-unstyled">
-                    <li><a href="{% url 'app:index' %}" class="text-white text-decoration-none">Ana Sayfa</a></li>
-                    <li><a href="{% url 'app:forum' %}" class="text-white text-decoration-none">Forum</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Projeler</a></li>
-                    <li><a href="{% url 'app:hakkimizda' %}" class="text-white text-decoration-none">Hakkımızda</a></li>
-                    <li><a href="{% url 'app:iletisim' %}" class="text-white text-decoration-none">İletişim</a></li>
-                    <li><a href="{% url 'app:privacy_policy' %}" class="text-white text-decoration-none">Gizlilik Politikası</a></li>
-                    <li><a href="{% url 'app:terms' %}" class="text-white text-decoration-none">Kullanım Şartları</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-4 mb-4">
-                <h5>Bültenimize Abone Olun</h5>
-                <p class="mb-3">En güncel teknoloji ve mühendislik haberlerini kaçırmayın!</p>
-                <form class="newsletter-form">
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="E-posta adresiniz" required>
-                        <button class="btn btn-primary" type="submit">Abone Ol</button>
-                    </div>
-                </form>
-                <div class="social-icons mt-4">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <hr class="mt-4">
-        <div class="text-center">
-            <p class="mb-0">&copy; 2024 Tugeto. Tüm hakları saklıdır.</p>
-        </div>
-    </div>
-</footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS Animation Library -->
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-        AOS.init();
+    <div class="recent-topics">
+        <h2 class="section-title">Son Konular</h2>
         
-        // Tooltip'leri etkinleştir
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
-    </script>
-</body>
-</html> 
+        {% for topic in recent_topics %}
+        <div class="topic-item">
+            {% if topic.author.profile.avatar and topic.author.profile.avatar.name %}
+                <img src="{{ topic.author.profile.avatar.url }}" alt="{{ topic.author.username }}" class="topic-avatar">
+            {% else %}
+                <img src="{% static 'app/img/default-avatar.png' %}" alt="{{ topic.author.username }}" class="topic-avatar">
+            {% endif %}
+            <div class="topic-content">
+                <h4 class="topic-title">
+                    <a href="{% url 'app:forum_topic' topic.id %}">{{ topic.title }}</a>
+                    {% if topic.is_pinned %}<i class="fas fa-thumbtack text-warning ml-2" title="Sabitlenmiş Konu"></i>{% endif %}
+                    {% if topic.is_closed %}<i class="fas fa-lock text-secondary ml-2" title="Kapalı Konu"></i>{% endif %}
+                </h4>
+                <div class="topic-meta">
+                    <span><i class="fas fa-user"></i> {{ topic.author.username }}</span>
+                    <span><i class="fas fa-folder"></i> {{ topic.category.name }}</span>
+                    <span><i class="far fa-clock"></i> {{ topic.created_at|date:"d.m.Y H:i" }}</span>
+                </div>
+            </div>
+            <div class="topic-stats">
+                <div class="stat-item">
+                    <i class="far fa-comment"></i> {{ topic.get_comments_count }}
+                </div>
+                <div class="stat-item">
+                    <i class="far fa-eye"></i> {{ topic.views }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">
+            Henüz hiç konu oluşturulmamış.
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="popular-topics">
+        <h2 class="section-title">Popüler Konular</h2>
+        
+        {% for topic in popular_topics %}
+        <div class="topic-item">
+            {% if topic.author.profile.avatar and topic.author.profile.avatar.name %}
+                <img src="{{ topic.author.profile.avatar.url }}" alt="{{ topic.author.username }}" class="topic-avatar">
+            {% else %}
+                <img src="{% static 'app/img/default-avatar.png' %}" alt="{{ topic.author.username }}" class="topic-avatar">
+            {% endif %}
+            <div class="topic-content">
+                <h4 class="topic-title">
+                    <a href="{% url 'app:forum_topic' topic.id %}">{{ topic.title }}</a>
+                    {% if topic.is_pinned %}<i class="fas fa-thumbtack text-warning ml-2" title="Sabitlenmiş Konu"></i>{% endif %}
+                    {% if topic.is_closed %}<i class="fas fa-lock text-secondary ml-2" title="Kapalı Konu"></i>{% endif %}
+                </h4>
+                <div class="topic-meta">
+                    <span><i class="fas fa-user"></i> {{ topic.author.username }}</span>
+                    <span><i class="fas fa-folder"></i> {{ topic.category.name }}</span>
+                    <span><i class="far fa-clock"></i> {{ topic.created_at|date:"d.m.Y H:i" }}</span>
+                </div>
+            </div>
+            <div class="topic-stats">
+                <div class="stat-item">
+                    <i class="far fa-comment"></i> {{ topic.get_comments_count }}
+                </div>
+                <div class="stat-item">
+                    <i class="far fa-eye"></i> {{ topic.views }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">
+            Henüz hiç konu oluşturulmamış.
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="text-center">
+        <a href="{% url 'app:create_topic' %}" class="create-topic-btn">
+            <i class="fas fa-plus-circle"></i> Yeni Konu Oluştur
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Tooltip'leri etkinleştir
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %} 

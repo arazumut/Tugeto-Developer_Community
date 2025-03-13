@@ -1,3 +1,7 @@
+#Author : K. Umut Araz
+#Date : 13.03.2025 ö3.08am
+
+
 """
 Django settings for Tugeto project.
 

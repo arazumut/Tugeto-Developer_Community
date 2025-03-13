@@ -1,0 +1,435 @@
+<!--
+Author : K. Umut Araz
+Date : 13.03.2025 ö3.08am
+-->
+
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}{{ topic.title }} - Forum - Tugeto{% endblock %}
+
+{% block extra_css %}
+<style>
+    .topic-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .breadcrumb-item a {
+        color: #6e8efb;
+    }
+    
+    .topic-header {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .topic-title {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    
+    .topic-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .topic-author {
+        display: flex;
+        align-items: center;
+    }
+    
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        object-fit: cover;
+    }
+    
+    .author-info h5 {
+        margin-bottom: 0.25rem;
+        font-size: 1.1rem;
+    }
+    
+    .author-info p {
+        margin-bottom: 0;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .topic-stats {
+        display: flex;
+        align-items: center;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        margin-left: 1.5rem;
+        color: #6c757d;
+    }
+    
+    .stat-item i {
+        margin-right: 0.5rem;
+    }
+    
+    .topic-content {
+        line-height: 1.7;
+        color: #333;
+    }
+    
+    .topic-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+    }
+    
+    .topic-actions .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .topic-actions .btn i {
+        margin-right: 0.5rem;
+    }
+    
+    .comments-section {
+        margin-top: 2rem;
+    }
+    
+    .comments-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .comments-title {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 0;
+    }
+    
+    .comment-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+    
+    .comment-card.solution {
+        border: 2px solid #28a745;
+    }
+    
+    .solution-badge {
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .comment-author {
+        display: flex;
+        align-items: center;
+    }
+    
+    .comment-content {
+        line-height: 1.7;
+        color: #333;
+    }
+    
+    .comment-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+    
+    .comment-actions .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        margin-left: 0.5rem;
+    }
+    
+    .comment-actions .btn i {
+        margin-right: 0.3rem;
+    }
+    
+    .comment-form {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .comment-form h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+    
+    .comment-form textarea {
+        resize: vertical;
+        min-height: 150px;
+    }
+    
+    .comment-form .btn-primary {
+        background: #6e8efb;
+        border-color: #6e8efb;
+    }
+    
+    .comment-form .btn-primary:hover {
+        background: #5a7df9;
+        border-color: #5a7df9;
+    }
+    
+    .login-prompt {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .login-prompt i {
+        font-size: 3rem;
+        color: #6e8efb;
+        margin-bottom: 1rem;
+    }
+    
+    .login-prompt h4 {
+        margin-bottom: 1rem;
+    }
+    
+    .login-prompt .btn {
+        margin-top: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .topic-meta {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .topic-stats {
+            margin-top: 1rem;
+            margin-left: 0;
+        }
+        
+        .stat-item:first-child {
+            margin-left: 0;
+        }
+        
+        .topic-actions {
+            flex-wrap: wrap;
+        }
+        
+        .topic-actions .btn {
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="topic-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app:index' %}">Ana Sayfa</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'app:forum' %}">Forum</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'app:forum_category' topic.category.slug %}">{{ topic.category.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ topic.title }}</li>
+        </ol>
+    </nav>
+    
+    <div class="topic-header">
+        <h1 class="topic-title">
+            {{ topic.title }}
+            {% if topic.is_pinned %}<i class="fas fa-thumbtack text-warning ml-2" title="Sabitlenmiş Konu"></i>{% endif %}
+            {% if topic.is_closed %}<i class="fas fa-lock text-secondary ml-2" title="Kapalı Konu"></i>{% endif %}
+        </h1>
+        
+        <div class="topic-meta">
+            <div class="topic-author">
+                {% if topic.author.profile.avatar and topic.author.profile.avatar.name %}
+                    <img src="{{ topic.author.profile.avatar.url }}" alt="{{ topic.author.username }}" class="author-avatar">
+                {% else %}
+                    <img src="{% static 'app/img/default-avatar.png' %}" alt="{{ topic.author.username }}" class="author-avatar">
+                {% endif %}
+                <div class="author-info">
+                    <h5>{{ topic.author.username }}</h5>
+                    <p>{{ topic.created_at|date:"d.m.Y H:i" }}</p>
+                </div>
+            </div>
+            
+            <div class="topic-stats">
+                <div class="stat-item">
+                    <i class="far fa-comment"></i> {{ topic.get_comment_count }} Yorum
+                </div>
+                <div class="stat-item">
+                    <i class="far fa-eye"></i> {{ topic.views }} Görüntülenme
+                </div>
+            </div>
+        </div>
+        
+        <div class="topic-content">
+            {{ topic.content|linebreaks }}
+        </div>
+        
+        {% if user.is_authenticated and user == topic.author or user.is_staff %}
+        <div class="topic-actions">
+            <div>
+                <a href="{% url 'app:edit_topic' topic.id %}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit"></i> Düzenle
+                </a>
+                <a href="{% url 'app:delete_topic' topic.id %}" class="btn btn-outline-danger">
+                    <i class="fas fa-trash"></i> Sil
+                </a>
+            </div>
+            
+            {% if user.is_staff %}
+            <div>
+                <form method="POST" action="{% url 'app:pin_topic' topic.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-warning">
+                        <i class="fas fa-thumbtack"></i> {% if topic.is_pinned %}Sabitlemeyi Kaldır{% else %}Sabitle{% endif %}
+                    </button>
+                </form>
+                
+                <form method="POST" action="{% url 'app:close_topic' topic.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-secondary">
+                        <i class="fas fa-lock"></i> {% if topic.is_closed %}Kilidi Aç{% else %}Kilitle{% endif %}
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="comments-section">
+        <div class="comments-header">
+            <h2 class="comments-title">Yorumlar ({{ topic.get_comment_count }})</h2>
+        </div>
+        
+        {% for comment in comments %}
+        <div class="comment-card {% if comment.is_solution %}solution{% endif %}">
+            {% if comment.is_solution %}
+            <div class="solution-badge">
+                <i class="fas fa-check-circle"></i> Çözüm
+            </div>
+            {% endif %}
+            
+            <div class="comment-header">
+                <div class="comment-author">
+                    {% if comment.author.profile.avatar and comment.author.profile.avatar.name %}
+                        <img src="{{ comment.author.profile.avatar.url }}" alt="{{ comment.author.username }}" class="author-avatar">
+                    {% else %}
+                        <img src="{% static 'app/img/default-avatar.png' %}" alt="{{ comment.author.username }}" class="author-avatar">
+                    {% endif %}
+                    <div class="author-info">
+                        <h5>{{ comment.author.username }}</h5>
+                        <p>{{ comment.created_at|date:"d.m.Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comment-content">
+                {{ comment.content|linebreaks }}
+            </div>
+            
+            <div class="comment-actions">
+                {% if user.is_authenticated and user == topic.author and not topic.is_closed and not comment.is_solution %}
+                <form method="POST" action="{% url 'app:mark_solution' comment.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success">
+                        <i class="fas fa-check-circle"></i> Çözüm Olarak İşaretle
+                    </button>
+                </form>
+                {% endif %}
+                
+                {% if user.is_authenticated and user == comment.author or user.is_staff %}
+                <a href="{% url 'app:edit_comment' comment.id %}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit"></i> Düzenle
+                </a>
+                <a href="{% url 'app:delete_comment' comment.id %}" class="btn btn-outline-danger">
+                    <i class="fas fa-trash"></i> Sil
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">
+            Bu konuya henüz yorum yapılmamış. İlk yorumu siz yapın!
+        </div>
+        {% endfor %}
+        
+        {% if user.is_authenticated and not topic.is_closed %}
+        <div class="comment-form">
+            <h3>Yorum Ekle</h3>
+            <form method="POST" action="{% url 'app:forum_topic' topic.id %}">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <textarea name="content" class="form-control" placeholder="Yorumunuzu buraya yazın..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Gönder
+                </button>
+            </form>
+        </div>
+        {% elif topic.is_closed %}
+        <div class="alert alert-warning">
+            <i class="fas fa-lock mr-2"></i> Bu konu kilitlenmiş ve yeni yorumlara kapatılmıştır.
+        </div>
+        {% else %}
+        <div class="login-prompt">
+            <i class="fas fa-user-circle"></i>
+            <h4>Yorum yapmak için giriş yapmalısınız</h4>
+            <p>Tartışmaya katılmak ve yorum yapmak için lütfen giriş yapın veya kayıt olun.</p>
+            <a href="{% url 'app:login' %}?next={{ request.path }}" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Giriş Yap
+            </a>
+            <a href="{% url 'app:register' %}" class="btn btn-outline-primary">
+                <i class="fas fa-user-plus"></i> Kayıt Ol
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

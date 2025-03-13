@@ -1,3 +1,6 @@
+#Author : K. Umut Araz
+#Date : 13.03.2025 ö3.08am
+
 """
 URL configuration for Tugeto project.
 

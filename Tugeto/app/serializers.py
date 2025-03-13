@@ -1,3 +1,6 @@
+#Author : K. Umut Araz
+#Date : 13.03.2025 3.14am
+
 from rest_framework import serializers
 from .models import (
     User, Skill, ForumCategory, ForumTopic, ForumComment,

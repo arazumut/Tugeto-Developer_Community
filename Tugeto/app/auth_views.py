@@ -1,3 +1,6 @@
+#Author : K. Umut Araz
+#Date : 13.03.2025 3.12am
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages

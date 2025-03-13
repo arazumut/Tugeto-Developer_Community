@@ -1,3 +1,6 @@
+#Author : K. Umut Araz
+#Date : 13.03.2025 ö3.08am
+
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import api_views
