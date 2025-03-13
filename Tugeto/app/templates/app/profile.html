@@ -1,456 +1,514 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profilim - Tugeto</title>
-    {% load static %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'app/css/auth.style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-</head>
-<body class="font-monospace bg-light">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+{% extends 'app/base.html' %}
+
+{% load static %}
+
+{% block title %}Profil - {{ user.username }} - Tugeto{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/css/profile.style.css' %}">
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .profile-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+        background-size: cover;
+        background-position: center;
+    }
+    
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid white;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        object-fit: cover;
+    }
+    
+    .profile-stats {
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        margin: 2rem 0;
+    }
+    
+    .profile-stat-item {
+        padding: 1rem;
+    }
+    
+    .profile-stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #4b6cb7;
+    }
+    
+    .profile-stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .profile-nav {
+        margin-bottom: 2rem;
+    }
+    
+    .profile-nav .nav-link {
+        color: #495057;
+        font-weight: 500;
+        padding: 0.75rem 1rem;
+        border-radius: 0;
+        border-bottom: 2px solid transparent;
+    }
+    
+    .profile-nav .nav-link.active {
+        color: #4b6cb7;
+        border-bottom: 2px solid #4b6cb7;
+    }
+    
+    .profile-section {
+        margin-bottom: 2rem;
+    }
+    
+    .skill-badge {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+        font-size: 0.9rem;
+    }
+    
+    .project-card {
+        transition: transform 0.3s;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <!-- Profil Başlık -->
+    <section class="profile-header">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'app:index' %}">
-                <img src="{% static 'app/assets/Adsız_tasarım-removebg-preview.png' %}" alt="Tugeto Logo" height="30" class="d-inline-block align-text-top me-2">
-                Tugeto
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" href="{% url 'app:index' %}">
-                            <i class="fas fa-home me-1"></i>
-                            Ana Sayfa
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center text-md-start">
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="profile-avatar">
+                    {% else %}
+                        <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=4b6cb7&color=fff&size=150" alt="{{ user.username }}" class="profile-avatar">
+                    {% endif %}
+                </div>
+                <div class="col-md-8 mt-4 mt-md-0 text-center text-md-start">
+                    <h1 class="display-4 fw-bold">{{ user.first_name }} {{ user.last_name }}</h1>
+                    <p class="lead">@{{ user.username }}</p>
+                    <p>
+                        <span class="badge bg-primary">{{ user.profile.get_user_type_display }}</span>
+                        <span class="badge bg-secondary">{{ user.email }}</span>
+                    </p>
+                    <div class="d-flex justify-content-center justify-content-md-start mt-3">
+                        <a href="#" class="btn btn-light me-2">
+                            <i class="fas fa-envelope me-1"></i> Mesaj Gönder
                         </a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" href="{% url 'app:forum' %}">
-                            <i class="fas fa-comments me-1"></i>
-                            Forum
+                        <a href="#" class="btn btn-outline-light">
+                            <i class="fas fa-user-plus me-1"></i> Takip Et
                         </a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" href="{% url 'app:yarisma' %}">
-                            <i class="fas fa-trophy me-1"></i>
-                            Yarışmalar
-                        </a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" href="{% url 'app:hakkimizda' %}">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Hakkımızda
-                        </a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link" href="{% url 'app:iletisim' %}">
-                            <i class="fas fa-envelope me-1"></i>
-                            İletişim
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="d-flex">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle me-1"></i>
-                            {{ user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item active" href="{% url 'app:profile' %}"><i class="fas fa-user me-2"></i>Profilim</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Ayarlar</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="{% url 'app:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap</a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Bölümü -->
-    <section class="auth-hero">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
-                    <h1 class="display-3 fw-bold mb-4">Profilim</h1>
-                    <p class="lead mb-4">Kişisel bilgilerinizi güncelleyin ve yeteneklerinizi gösterin</p>
-                </div>
-            </div>
-        </div>
-        <div class="auth-hero-wave">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#f8f9fa" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
         </div>
     </section>
 
-    <!-- Profil Bölümü -->
-    <div class="auth-container">
+    <!-- Profil İstatistikleri -->
+    <section class="profile-stats">
         <div class="container">
             <div class="row">
-                <!-- Sol Taraf - Profil Kartı -->
-                <div class="col-lg-4 mb-4">
-                    <div class="auth-card profile-sidebar" data-aos="fade-up">
-                        <div class="card-body text-center">
-                            <div class="profile-image-container mb-4">
-                                {% if user.profile.avatar %}
-                                <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="profile-image">
-                                {% else %}
-                                <div class="profile-image-placeholder">
-                                    <i class="fas fa-user fa-3x"></i>
+                <div class="col-md-3">
+                    <div class="profile-stat-item">
+                        <div class="profile-stat-value">12</div>
+                        <div class="profile-stat-label">Projeler</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="profile-stat-item">
+                        <div class="profile-stat-value">48</div>
+                        <div class="profile-stat-label">Forum Gönderileri</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="profile-stat-item">
+                        <div class="profile-stat-value">256</div>
+                        <div class="profile-stat-label">Takipçiler</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="profile-stat-item">
+                        <div class="profile-stat-value">3</div>
+                        <div class="profile-stat-label">Yarışma Katılımları</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profil İçeriği -->
+    <section class="profile-content">
+        <div class="container">
+            <!-- Profil Navigasyonu -->
+            <ul class="nav nav-tabs profile-nav" id="profileTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">
+                        <i class="fas fa-user me-1"></i> Genel Bakış
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab" aria-controls="projects" aria-selected="false">
+                        <i class="fas fa-code-branch me-1"></i> Projeler
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab" aria-controls="posts" aria-selected="false">
+                        <i class="fas fa-comments me-1"></i> Forum Gönderileri
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">
+                        <i class="fas fa-cog me-1"></i> Profil Ayarları
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab İçerikleri -->
+            <div class="tab-content" id="profileTabContent">
+                <!-- Genel Bakış -->
+                <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                    <div class="row mt-4">
+                        <div class="col-lg-8">
+                            <!-- Hakkında -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Hakkında</h5>
                                 </div>
-                                {% endif %}
-                                <div class="profile-image-edit">
-                                    <label for="profile-image-upload" class="btn btn-sm btn-primary rounded-circle">
-                                        <i class="fas fa-camera"></i>
-                                    </label>
+                                <div class="card-body">
+                                    <p>{{ user.profile.bio|default:"Henüz bir biyografi eklenmemiş." }}</p>
                                 </div>
                             </div>
-                            
-                            <h3 class="mb-1">{{ user.get_full_name }}</h3>
-                            <p class="text-muted mb-3">@{{ user.username }}</p>
-                            
-                            <div class="user-type-badge mb-3">
-                                {% if user.profile.user_type == 'student' %}
-                                <span class="badge bg-info"><i class="fas fa-graduation-cap me-1"></i> Öğrenci</span>
-                                {% elif user.profile.user_type == 'developer' %}
-                                <span class="badge bg-success"><i class="fas fa-code me-1"></i> Geliştirici</span>
-                                {% elif user.profile.user_type == 'instructor' %}
-                                <span class="badge bg-warning"><i class="fas fa-chalkboard-teacher me-1"></i> Eğitmen</span>
-                                {% elif user.profile.user_type == 'company' %}
-                                <span class="badge bg-secondary"><i class="fas fa-building me-1"></i> Şirket</span>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="profile-stats d-flex justify-content-around mb-4">
-                                <div class="stat-item">
-                                    <h5>0</h5>
-                                    <small class="text-muted">Projeler</small>
+
+                            <!-- Yetenekler -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-code me-2"></i>Yetenekler</h5>
                                 </div>
-                                <div class="stat-item">
-                                    <h5>0</h5>
-                                    <small class="text-muted">Yarışmalar</small>
-                                </div>
-                                <div class="stat-item">
-                                    <h5>0</h5>
-                                    <small class="text-muted">Takipçiler</small>
-                                </div>
-                            </div>
-                            
-                            <div class="profile-skills mb-4">
-                                <h6 class="mb-2">Yetenekler</h6>
-                                <div class="skills-container">
-                                    {% if user.profile.skills %}
-                                        {% for skill in user.profile.skills %}
-                                        <span class="badge bg-primary m-1">{{ skill }}</span>
+                                <div class="card-body">
+                                    {% if user.skills.all %}
+                                        {% for skill in user.skills.all %}
+                                            <span class="skill-badge">{{ skill.name }}</span>
                                         {% endfor %}
                                     {% else %}
-                                        <p class="text-muted small">Henüz yetenek eklenmemiş</p>
+                                        <p class="text-muted">Henüz bir yetenek eklenmemiş.</p>
                                     {% endif %}
                                 </div>
                             </div>
-                            
-                            <div class="profile-social">
-                                <a href="#" class="btn btn-outline-dark btn-sm rounded-circle me-1">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                                <a href="#" class="btn btn-outline-dark btn-sm rounded-circle me-1">
-                                    <i class="fab fa-linkedin"></i>
-                                </a>
-                                <a href="#" class="btn btn-outline-dark btn-sm rounded-circle me-1">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="#" class="btn btn-outline-dark btn-sm rounded-circle">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
+
+                            <!-- Son Aktiviteler -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Son Aktiviteler</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-code-branch text-primary me-2"></i>
+                                                <span>Yeni bir proje oluşturdu: <a href="#">Django E-Ticaret</a></span>
+                                            </div>
+                                            <span class="text-muted small">2 gün önce</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-comment text-success me-2"></i>
+                                                <span>Bir forum gönderisine yorum yaptı: <a href="#">React vs Vue</a></span>
+                                            </div>
+                                            <span class="text-muted small">5 gün önce</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-trophy text-warning me-2"></i>
+                                                <span>Bir yarışmaya katıldı: <a href="#">Web Hackathon</a></span>
+                                            </div>
+                                            <span class="text-muted small">1 hafta önce</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <!-- İletişim Bilgileri -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-address-card me-2"></i>İletişim</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <i class="fas fa-envelope text-primary me-2"></i>
+                                            {{ user.email }}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                            {{ user.profile.location|default:"Belirtilmemiş" }}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <i class="fas fa-globe text-success me-2"></i>
+                                            {{ user.profile.website|default:"Belirtilmemiş" }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Sosyal Medya -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-share-alt me-2"></i>Sosyal Medya</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <a href="#" class="btn btn-outline-dark">
+                                            <i class="fab fa-github me-2"></i>GitHub
+                                        </a>
+                                        <a href="#" class="btn btn-outline-primary">
+                                            <i class="fab fa-linkedin me-2"></i>LinkedIn
+                                        </a>
+                                        <a href="#" class="btn btn-outline-info">
+                                            <i class="fab fa-twitter me-2"></i>Twitter
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Sağ Taraf - Profil Düzenleme Formu -->
-                <div class="col-lg-8">
-                    <div class="auth-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="card-body">
-                            <h4 class="mb-4">Profil Bilgilerinizi Düzenleyin</h4>
-                            
-                            {% if messages %}
-                            <div class="messages mb-4">
-                                {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                <!-- Projeler -->
+                <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
+                    <div class="row mt-4">
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 project-card">
+                                <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Proje Görseli">
+                                <div class="card-body">
+                                    <h5 class="card-title">Django E-Ticaret</h5>
+                                    <p class="card-text">Django ile geliştirilmiş tam kapsamlı bir e-ticaret platformu.</p>
+                                    <div class="d-flex mb-3">
+                                        <span class="badge bg-primary me-1">Django</span>
+                                        <span class="badge bg-secondary me-1">Python</span>
+                                        <span class="badge bg-success">PostgreSQL</span>
+                                    </div>
                                 </div>
-                                {% endfor %}
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">2 gün önce güncellendi</small>
+                                        <a href="#" class="btn btn-sm btn-outline-primary">Detaylar</a>
+                                    </div>
+                                </div>
                             </div>
-                            {% endif %}
-                            
-                            <form action="{% url 'app:profile' %}" method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                
-                                <input type="file" id="profile-image-upload" name="avatar" class="d-none">
-                                
-                                <div class="row">
-                                    <!-- Ad -->
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-floating">
-                                            <input type="text" class="form-control" id="id_first_name" name="first_name" placeholder="Ad" value="{{ user.first_name }}" required>
-                                            <label for="id_first_name">Ad</label>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Soyad -->
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-floating">
-                                            <input type="text" class="form-control" id="id_last_name" name="last_name" placeholder="Soyad" value="{{ user.last_name }}" required>
-                                            <label for="id_last_name">Soyad</label>
-                                        </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 project-card">
+                                <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Proje Görseli">
+                                <div class="card-body">
+                                    <h5 class="card-title">React Blog</h5>
+                                    <p class="card-text">React ve Firebase kullanılarak geliştirilen modern bir blog uygulaması.</p>
+                                    <div class="d-flex mb-3">
+                                        <span class="badge bg-primary me-1">React</span>
+                                        <span class="badge bg-secondary me-1">JavaScript</span>
+                                        <span class="badge bg-danger">Firebase</span>
                                     </div>
                                 </div>
-                                
-                                <div class="row">
-                                    <!-- E-posta -->
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-floating">
-                                            <input type="email" class="form-control" id="id_email" name="email" placeholder="E-posta Adresi" value="{{ user.email }}" required>
-                                            <label for="id_email">E-posta Adresi</label>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Kullanıcı Adı -->
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-floating">
-                                            <input type="text" class="form-control" id="id_username" name="username" placeholder="Kullanıcı Adı" value="{{ user.username }}" readonly>
-                                            <label for="id_username">Kullanıcı Adı (değiştirilemez)</label>
-                                        </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">1 hafta önce güncellendi</small>
+                                        <a href="#" class="btn btn-sm btn-outline-primary">Detaylar</a>
                                     </div>
                                 </div>
-                                
-                                <!-- Kullanıcı Tipi -->
-                                <div class="mb-4">
-                                    <label class="form-label">Kullanıcı Tipi</label>
-                                    <div class="user-type-container">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 project-card">
+                                <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Proje Görseli">
+                                <div class="card-body">
+                                    <h5 class="card-title">Flutter To-Do</h5>
+                                    <p class="card-text">Flutter ile geliştirilen çapraz platform bir görev yönetim uygulaması.</p>
+                                    <div class="d-flex mb-3">
+                                        <span class="badge bg-primary me-1">Flutter</span>
+                                        <span class="badge bg-secondary me-1">Dart</span>
+                                        <span class="badge bg-info">SQLite</span>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">2 hafta önce güncellendi</small>
+                                        <a href="#" class="btn btn-sm btn-outline-primary">Detaylar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forum Gönderileri -->
+                <div class="tab-pane fade" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                    <div class="mt-4">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">React vs Vue: Hangisi Daha İyi?</h5>
+                                <span class="badge bg-primary">Tartışma</span>
+                            </div>
+                            <div class="card-body">
+                                <p>Modern web geliştirmede React ve Vue.js arasındaki farklar nelerdir? Hangi durumlarda hangisini tercih etmeliyiz?</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="me-3"><i class="fas fa-comment text-primary me-1"></i> 24 Yorum</span>
+                                        <span><i class="fas fa-eye text-secondary me-1"></i> 156 Görüntülenme</span>
+                                    </div>
+                                    <small class="text-muted">5 gün önce</small>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="#" class="btn btn-sm btn-outline-primary">Görüntüle</a>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Django ORM İpuçları</h5>
+                                <span class="badge bg-success">İpucu</span>
+                            </div>
+                            <div class="card-body">
+                                <p>Django ORM'i daha etkili kullanmak için bilmeniz gereken en önemli ipuçları ve püf noktaları.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="me-3"><i class="fas fa-comment text-primary me-1"></i> 12 Yorum</span>
+                                        <span><i class="fas fa-eye text-secondary me-1"></i> 98 Görüntülenme</span>
+                                    </div>
+                                    <small class="text-muted">2 hafta önce</small>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="#" class="btn btn-sm btn-outline-primary">Görüntüle</a>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Flutter'da State Yönetimi</h5>
+                                <span class="badge bg-warning">Soru</span>
+                            </div>
+                            <div class="card-body">
+                                <p>Flutter uygulamalarında state yönetimi için hangi yaklaşımları kullanıyorsunuz? Provider, Bloc, GetX arasındaki farklar nelerdir?</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="me-3"><i class="fas fa-comment text-primary me-1"></i> 8 Yorum</span>
+                                        <span><i class="fas fa-eye text-secondary me-1"></i> 76 Görüntülenme</span>
+                                    </div>
+                                    <small class="text-muted">3 hafta önce</small>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="#" class="btn btn-sm btn-outline-primary">Görüntüle</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profil Ayarları -->
+                <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                    <div class="row mt-4">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-user-edit me-2"></i>Profil Bilgilerini Düzenle</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form action="{% url 'app:profile' %}" method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        
+                                        <div class="mb-3">
+                                            <label for="id_avatar" class="form-label">Profil Fotoğrafı</label>
+                                            <input type="file" class="form-control" id="id_avatar" name="avatar">
+                                        </div>
+                                        
                                         <div class="row">
-                                            <div class="col-md-3 mb-3">
-                                                <input type="radio" class="btn-check" name="user_type" id="user_type_student" value="student" autocomplete="off" {% if user.profile.user_type == 'student' %}checked{% endif %}>
-                                                <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" for="user_type_student">
-                                                    <i class="fas fa-graduation-cap fa-2x mb-2"></i>
-                                                    <span>Öğrenci</span>
-                                                </label>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="id_first_name" class="form-label">Ad</label>
+                                                <input type="text" class="form-control" id="id_first_name" name="first_name" value="{{ user.first_name }}">
                                             </div>
-                                            <div class="col-md-3 mb-3">
-                                                <input type="radio" class="btn-check" name="user_type" id="user_type_developer" value="developer" autocomplete="off" {% if user.profile.user_type == 'developer' %}checked{% endif %}>
-                                                <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" for="user_type_developer">
-                                                    <i class="fas fa-code fa-2x mb-2"></i>
-                                                    <span>Geliştirici</span>
-                                                </label>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <input type="radio" class="btn-check" name="user_type" id="user_type_instructor" value="instructor" autocomplete="off" {% if user.profile.user_type == 'instructor' %}checked{% endif %}>
-                                                <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" for="user_type_instructor">
-                                                    <i class="fas fa-chalkboard-teacher fa-2x mb-2"></i>
-                                                    <span>Eğitmen</span>
-                                                </label>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <input type="radio" class="btn-check" name="user_type" id="user_type_company" value="company" autocomplete="off" {% if user.profile.user_type == 'company' %}checked{% endif %}>
-                                                <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" for="user_type_company">
-                                                    <i class="fas fa-building fa-2x mb-2"></i>
-                                                    <span>Şirket</span>
-                                                </label>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="id_last_name" class="form-label">Soyad</label>
+                                                <input type="text" class="form-control" id="id_last_name" name="last_name" value="{{ user.last_name }}">
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Yetenekler -->
-                                <div class="mb-4">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="id_skills" name="skills" placeholder="Yetenekler" value="{{ user.profile.skills|join:', ' }}">
-                                        <label for="id_skills">Yetenekler (virgülle ayırın)</label>
-                                    </div>
-                                    <small class="text-muted">Örnek: Python, JavaScript, Django, React...</small>
-                                </div>
-                                
-                                <!-- Biyografi -->
-                                <div class="mb-4">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" id="id_bio" name="bio" placeholder="Biyografi" style="height: 120px">{{ user.profile.bio }}</textarea>
-                                        <label for="id_bio">Biyografi</label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Sosyal Medya Bağlantıları -->
-                                <div class="row mb-4">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fab fa-github"></i></span>
-                                            <div class="form-floating flex-grow-1">
-                                                <input type="text" class="form-control" id="id_github" name="github" placeholder="GitHub" value="{{ user.profile.github }}">
-                                                <label for="id_github">GitHub</label>
-                                            </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="id_email" class="form-label">E-posta</label>
+                                            <input type="email" class="form-control" id="id_email" name="email" value="{{ user.email }}">
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
-                                            <div class="form-floating flex-grow-1">
-                                                <input type="text" class="form-control" id="id_linkedin" name="linkedin" placeholder="LinkedIn" value="{{ user.profile.linkedin }}">
-                                                <label for="id_linkedin">LinkedIn</label>
-                                            </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="id_bio" class="form-label">Biyografi</label>
+                                            <textarea class="form-control" id="id_bio" name="bio" rows="4">{{ user.profile.bio }}</textarea>
                                         </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Kaydet Butonu -->
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-auth btn-primary py-3">
-                                        <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <!-- Şifre Değiştirme Kartı -->
-                    <div class="auth-card mt-4" data-aos="fade-up" data-aos-delay="200">
-                        <div class="card-body">
-                            <h4 class="mb-4">Şifre Değiştir</h4>
-                            
-                            <form action="#" method="POST">
-                                {% csrf_token %}
-                                
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="password" class="form-control" id="id_old_password" name="old_password" placeholder="Mevcut Şifre" required>
-                                        <label for="id_old_password">Mevcut Şifre</label>
-                                        <button type="button" class="password-toggle" onclick="togglePassword('id_old_password')">
-                                            <i class="fas fa-eye"></i>
+                                        
+                                        <div class="mb-3">
+                                            <label for="id_location" class="form-label">Konum</label>
+                                            <input type="text" class="form-control" id="id_location" name="location" value="{{ user.profile.location }}">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="id_website" class="form-label">Web Sitesi</label>
+                                            <input type="url" class="form-control" id="id_website" name="website" value="{{ user.profile.website }}">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="id_user_type" class="form-label">Kullanıcı Tipi</label>
+                                            <select class="form-select" id="id_user_type" name="user_type">
+                                                <option value="student" {% if user.profile.user_type == 'student' %}selected{% endif %}>Öğrenci</option>
+                                                <option value="developer" {% if user.profile.user_type == 'developer' %}selected{% endif %}>Geliştirici</option>
+                                                <option value="instructor" {% if user.profile.user_type == 'instructor' %}selected{% endif %}>Eğitmen</option>
+                                                <option value="company" {% if user.profile.user_type == 'company' %}selected{% endif %}>Şirket</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="id_skills" class="form-label">Yetenekler (virgülle ayırın)</label>
+                                            <input type="text" class="form-control" id="id_skills" name="skills" value="{% for skill in user.skills.all %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Değişiklikleri Kaydet
                                         </button>
-                                    </div>
+                                    </form>
                                 </div>
-                                
-                                <div class="mb-3">
-                                    <div class="form-floating">
-                                        <input type="password" class="form-control" id="id_new_password1" name="new_password1" placeholder="Yeni Şifre" required>
-                                        <label for="id_new_password1">Yeni Şifre</label>
-                                        <button type="button" class="password-toggle" onclick="togglePassword('id_new_password1')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-4">
-                                    <div class="form-floating">
-                                        <input type="password" class="form-control" id="id_new_password2" name="new_password2" placeholder="Yeni Şifre (Tekrar)" required>
-                                        <label for="id_new_password2">Yeni Şifre (Tekrar)</label>
-                                        <button type="button" class="password-toggle" onclick="togglePassword('id_new_password2')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-outline-primary py-3">
-                                        <i class="fas fa-key me-2"></i>Şifreyi Değiştir
-                                    </button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <img src="{% static 'app/assets/Adsız_tasarım-removebg-preview.png' %}" alt="Tugeto Logo" height="50">
-                    <p class="mt-3">Yazılım dünyasında yenilikçi fikirleri destekleyen ve geliştiren topluluk platformu.</p>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <h5>Hızlı Bağlantılar</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'app:index' %}" class="text-white text-decoration-none">Ana Sayfa</a></li>
-                        <li><a href="{% url 'app:forum' %}" class="text-white text-decoration-none">Forum</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Projeler</a></li>
-                        <li><a href="{% url 'app:hakkimizda' %}" class="text-white text-decoration-none">Hakkımızda</a></li>
-                        <li><a href="{% url 'app:iletisim' %}" class="text-white text-decoration-none">İletişim</a></li>
-                        <li><a href="{% url 'app:privacy_policy' %}" class="text-white text-decoration-none">Gizlilik Politikası</a></li>
-                        <li><a href="{% url 'app:terms' %}" class="text-white text-decoration-none">Kullanım Şartları</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <h5>Bültenimize Abone Olun</h5>
-                    <p class="mb-3">En güncel teknoloji ve mühendislik haberlerini kaçırmayın!</p>
-                    <form class="newsletter-form">
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder="E-posta adresiniz" required>
-                            <button class="btn btn-primary" type="submit">Abone Ol</button>
-                        </div>
-                    </form>
-                    <div class="social-icons mt-4">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <hr class="mt-4">
-            <div class="text-center">
-                <p class="mb-0">&copy; 2024 Tugeto. Tüm hakları saklıdır.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS Animation Library -->
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-        AOS.init();
-        
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            
-            const icon = event.currentTarget.querySelector('i');
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
-        }
-        
-        // Profil resmi yükleme
-        document.getElementById('profile-image-upload').addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    const profileImage = document.querySelector('.profile-image');
-                    if (profileImage) {
-                        profileImage.src = e.target.result;
-                    } else {
-                        const placeholder = document.querySelector('.profile-image-placeholder');
-                        if (placeholder) {
-                            placeholder.innerHTML = `<img src="${e.target.result}" alt="Profile" class="profile-image">`;
-                        }
-                    }
-                }
-                
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-    </script>
-</body>
-</html> 
+    </section>
+{% endblock %} 

@@ -1,0 +1,264 @@
+{% extends 'app/base.html' %}
+
+{% load static %}
+
+{% block title %}Kullanım Şartları - Tugeto{% endblock %}
+
+{% block extra_css %}
+<style>
+    .terms-section {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        height: 100%;
+    }
+    
+    .terms-icon {
+        font-size: 2rem;
+        color: #4b6cb7;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(75, 108, 183, 0.1);
+        border-radius: 50%;
+    }
+    
+    .terms-list {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .terms-list li {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f8f9fa;
+        display: flex;
+        align-items: center;
+    }
+    
+    .terms-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .terms-list li i {
+        color: #4b6cb7;
+        margin-right: 1rem;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .stat-card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.3s;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .bg-stat-primary {
+        background-color: rgba(75, 108, 183, 0.1);
+    }
+    
+    .bg-stat-success {
+        background-color: rgba(40, 167, 69, 0.1);
+    }
+    
+    .bg-stat-warning {
+        background-color: rgba(255, 193, 7, 0.1);
+    }
+    
+    .bg-stat-info {
+        background-color: rgba(23, 162, 184, 0.1);
+    }
+    
+    .stat-icon-primary {
+        color: #4b6cb7;
+    }
+    
+    .stat-icon-success {
+        color: #28a745;
+    }
+    
+    .stat-icon-warning {
+        color: #ffc107;
+    }
+    
+    .stat-icon-info {
+        color: #17a2b8;
+    }
+    
+    .contact-card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="container py-5">
+        <!-- Bilgilendirme Kartı -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10">
+                <div class="card border-0 bg-primary bg-opacity-10 shadow-sm rounded-4">
+                    <div class="card-body p-4 p-lg-5">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h4 class="text-primary mb-3">
+                                    <i class="fas fa-file-contract me-2"></i>
+                                    Kullanım Şartları
+                                </h4>
+                                <p class="lead mb-0">Platform kullanımına başlamadan önce lütfen tüm şartları dikkatle okuyunuz. Platformu kullanmaya başladığınızda bu şartları kabul etmiş sayılırsınız.</p>
+                            </div>
+                            <div class="col-md-4 text-center mt-4 mt-md-0">
+                                <div class="bg-white p-4 rounded-4 shadow-sm">
+                                    <div class="display-4 text-primary mb-2">
+                                        <i class="fas fa-gavel"></i>
+                                    </div>
+                                    <h5 class="mb-0">Yasal Kurallar</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ana İçerik -->
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="terms-section h-100">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="fas fa-gavel terms-icon"></i>
+                        <h2 class="h4 ms-3 mb-0">Genel Kurallar</h2>
+                    </div>
+                    <ul class="terms-list">
+                        <li><i class="fas fa-check"></i>Diğer kullanıcılara saygılı davranmak</li>
+                        <li><i class="fas fa-check"></i>Telif haklarına uymak</li>
+                        <li><i class="fas fa-check"></i>Yasalara aykırı içerik paylaşmamak</li>
+                        <li><i class="fas fa-check"></i>Platform güvenliğini tehdit etmemek</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="terms-section h-100">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="fas fa-user-shield terms-icon"></i>
+                        <h2 class="h4 ms-3 mb-0">Hesap Güvenliği</h2>
+                    </div>
+                    <ul class="terms-list">
+                        <li><i class="fas fa-key"></i>Güçlü şifre kullanımı</li>
+                        <li><i class="fas fa-user-lock"></i>Hesap bilgilerini koruma</li>
+                        <li><i class="fas fa-shield-alt"></i>Şüpheli aktiviteleri bildirme</li>
+                        <li><i class="fas fa-user-check"></i>Doğru bilgi sağlama</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="terms-section h-100">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="fas fa-file-alt terms-icon"></i>
+                        <h2 class="h4 ms-3 mb-0">İçerik Politikası</h2>
+                    </div>
+                    <ul class="terms-list">
+                        <li><i class="fas fa-copyright"></i>Özgün içerik paylaşımı</li>
+                        <li><i class="fas fa-check-double"></i>İçerik doğruluğu</li>
+                        <li><i class="fas fa-ban"></i>Spam ve kötüye kullanım yasağı</li>
+                        <li><i class="fas fa-ad"></i>Reklam politikalarına uyum</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="terms-section h-100">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="fas fa-exclamation-circle terms-icon"></i>
+                        <h2 class="h4 ms-3 mb-0">Yaptırımlar</h2>
+                    </div>
+                    <ul class="terms-list">
+                        <li><i class="fas fa-exclamation"></i>Uyarı sistemi</li>
+                        <li><i class="fas fa-user-clock"></i>Geçici hesap askıya alma</li>
+                        <li><i class="fas fa-user-slash"></i>Kalıcı hesap kapatma</li>
+                        <li><i class="fas fa-balance-scale"></i>Yasal işlem başlatma</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- İstatistik Kartları -->
+        <div class="row g-4 mt-5">
+            <div class="col-md-3">
+                <div class="card stat-card bg-stat-primary">
+                    <div class="card-body text-center p-4">
+                        <div class="display-4 stat-icon-primary mb-3">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="display-6 fw-bold text-dark">50K+</h3>
+                        <p class="text-muted mb-0">Aktif Kullanıcı</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card bg-stat-success">
+                    <div class="card-body text-center p-4">
+                        <div class="display-4 stat-icon-success mb-3">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <h3 class="display-6 fw-bold text-success">98%</h3>
+                        <p class="text-muted mb-0">Kabul Oranı</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card bg-stat-warning">
+                    <div class="card-body text-center p-4">
+                        <div class="display-4 stat-icon-warning mb-3">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3 class="display-6 fw-bold text-warning">1K+</h3>
+                        <p class="text-muted mb-0">Günlük İşlem</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card bg-stat-info">
+                    <div class="card-body text-center p-4">
+                        <div class="display-4 stat-icon-info mb-3">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="display-6 fw-bold text-info">24/7</h3>
+                        <p class="text-muted mb-0">Destek</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kabul Kartı -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-8">
+                <div class="card contact-card border-0 shadow-lg">
+                    <div class="card-body p-5 text-center text-black">
+                        <div class="display-4 mb-4">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h4 class="mb-3">Şartları Kabul Ediyor musunuz?</h4>
+                        <p class="mb-4">Platformumuzu kullanmaya başlamak için kullanım şartlarını kabul etmeniz gerekmektedir.</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'app:register' %}" class="btn btn-dark px-4 rounded-pill">
+                                <i class="fas fa-check me-2"></i>Kabul Ediyorum
+                            </a>
+                            <a href="{% url 'app:privacy_policy' %}" class="btn btn-outline-dark px-4 rounded-pill">
+                                <i class="fas fa-question-circle me-2"></i>Daha Fazla Bilgi
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %} 
