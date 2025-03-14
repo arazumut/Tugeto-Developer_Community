@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tugeto'ya Hoş Geldiniz!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #4b6cb7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4b6cb7;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Tugeto'ya Hoş Geldiniz!</h1>
+    </div>
+    <div class="content">
+        <p>Merhaba {{ user.username }},</p>
+        
+        <p>Tugeto'ya kayıt olduğunuz için teşekkür ederiz! Artık topluluğumuzun bir parçasısınız.</p>
+        
+        <p>Tugeto, mühendislik ve yazılım dünyasında yenilikçi fikirleri destekleyen ve geliştiren bir topluluk platformudur. Burada:</p>
+        
+        <ul>
+            <li>Forumda diğer üyelerle bilgi paylaşabilir,</li>
+            <li>Projelerde işbirliği yapabilir,</li>
+            <li>Yarışmalara katılabilir,</li>
+            <li>Ve çok daha fazlasını yapabilirsiniz!</li>
+        </ul>
+        
+        <p>Hemen profilinizi tamamlayarak başlayabilirsiniz:</p>
+        
+        <p style="text-align: center;">
+            <a href="{{ profile_url }}" class="button">Profilimi Düzenle</a>
+        </p>
+        
+        <p>Herhangi bir sorunuz olursa, lütfen bizimle iletişime geçmekten çekinmeyin.</p>
+        
+        <p>Saygılarımızla,<br>Tugeto Ekibi</p>
+    </div>
+    <div class="footer">
+        <p>Bu e-posta, Tugeto platformuna kayıt olduğunuz için gönderilmiştir.</p>
+        <p>&copy; 2024 Tugeto. Tüm hakları saklıdır.</p>
+    </div>
+</body>
+</html> 

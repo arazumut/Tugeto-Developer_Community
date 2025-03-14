@@ -141,18 +141,12 @@ Date : 13.03.2025 ö3.08am
                 <div class="col-lg-4 mb-4">
                     <h5>Bültenimize Abone Olun</h5>
                     <p class="mb-3">En güncel teknoloji ve mühendislik haberlerini kaçırmayın!</p>
-                    <form class="newsletter-form">
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder="E-posta adresiniz" required>
-                            <button class="btn btn-primary" type="submit">Abone Ol</button>
-                        </div>
+                    <form id="newsletterForm" class="d-flex flex-column flex-sm-row gap-2">
+                        {% csrf_token %}
+                        <input type="email" name="email" class="form-control" placeholder="E-posta adresiniz" required>
+                        <button type="submit" class="btn btn-primary">Abone Ol</button>
                     </form>
-                    <div class="social-icons mt-4">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
+                    <div id="newsletterMessage" class="mt-2"></div>
                 </div>
             </div>
             <hr class="mt-4">
@@ -169,6 +163,30 @@ Date : 13.03.2025 ö3.08am
     <script>
         AOS.init();
     </script>
-    {% block extra_js %}{% endblock %}
+    <script>
+        $(document).ready(function() {
+            $('#newsletterForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "app:newsletter_subscribe" %}',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            $('#newsletterMessage').html('<div class="alert alert-success">' + response.message + '</div>');
+                            $('#newsletterForm')[0].reset();
+                        } else {
+                            $('#newsletterMessage').html('<div class="alert alert-warning">' + response.message + '</div>');
+                        }
+                    },
+                    error: function() {
+                        $('#newsletterMessage').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html> 

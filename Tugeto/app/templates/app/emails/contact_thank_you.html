@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mesajınız için teşekkürler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #4b6cb7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .message-summary {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Mesajınız için teşekkürler</h1>
+    </div>
+    <div class="content">
+        <p>Merhaba {{ contact.name }},</p>
+        
+        <p>Tugeto'ya mesaj gönderdiğiniz için teşekkür ederiz. Mesajınızı aldık ve en kısa sürede size dönüş yapacağız.</p>
+        
+        <div class="message-summary">
+            <p><strong>Konu:</strong> {{ contact.subject }}</p>
+            <p><strong>Mesaj:</strong></p>
+            <p>{{ contact.message }}</p>
+        </div>
+        
+        <p>Başka sorularınız veya geri bildirimleriniz varsa, lütfen bize yazmaktan çekinmeyin.</p>
+        
+        <p>Saygılarımızla,<br>Tugeto Ekibi</p>
+    </div>
+    <div class="footer">
+        <p>Bu e-posta, Tugeto platformu tarafından otomatik olarak gönderilmiştir.</p>
+        <p>&copy; 2024 Tugeto. Tüm hakları saklıdır.</p>
+    </div>
+</body>
+</html> 

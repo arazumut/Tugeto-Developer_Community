@@ -184,3 +184,14 @@ CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='http://localhost:
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# E-posta Ayarları
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'arazumut349@gmail.com'  # Gerçek Gmail adresinizi girin
+EMAIL_HOST_PASSWORD = 'qukd tfrb'#burayı düzenle şifreyi kıstım yanlış o şifre 
+DEFAULT_FROM_EMAIL = 'Tugeto <arazumut349@gmail.com>'  # E-posta adresinizi kullanın
+
+

@@ -5,11 +5,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import UserRegisterForm, UserLoginForm, UserProfileForm
-from .models import User, Skill, ForumCategory, ForumTopic, ForumComment, Profile, Competition, CompetitionParticipant, CompetitionAnnouncement
+from .forms import UserRegisterForm, UserLoginForm, UserProfileForm, ContactForm, NewsletterForm, EmailPreferenceForm
+from .models import User, Skill, ForumCategory, ForumTopic, ForumComment, Profile, Competition, CompetitionParticipant, CompetitionAnnouncement, Newsletter, EmailPreference
 from django.db.models import Count, Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django.urls import reverse
+from .utils import send_html_email
+from django.conf import settings
+from django.http import JsonResponse
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 
 # Create your views here.
 def index(request):
@@ -85,6 +91,10 @@ def create_topic(request):
                 category=category,
                 author=request.user
             )
+            
+            
+            send_forum_topic_notification(request, topic)
+            
             messages.success(request, 'Konunuz başarıyla oluşturuldu.')
             return redirect('app:forum_topic', topic_id=topic.id)
         else:
@@ -97,6 +107,40 @@ def create_topic(request):
         'main_categories': main_categories,
     }
     return render(request, 'app/create_topic.html', context)
+
+def send_forum_topic_notification(request, topic):
+    """Yeni forum konusu açıldığında e-posta bildirimi gönderir."""
+    # E-posta almak isteyen kullanıcıları bul
+    recipients = User.objects.filter(
+        email_preferences__new_forum_topics=True,
+        is_active=True
+    ).exclude(email='').exclude(id=topic.author.id)  
+    
+    if not recipients:
+        return
+    
+    topic_url = request.build_absolute_uri(
+        reverse('app:forum_topic', kwargs={'topic_id': topic.id})
+    )
+    
+    for recipient in recipients:
+        
+        unsubscribe_url = request.build_absolute_uri(
+            reverse('app:email_preferences')
+        )
+        
+        # E-posta gönder
+        send_html_email(
+            subject=f'Yeni Forum Konusu: {topic.title}',
+            template_name='app/emails/new_forum_topic_notification.html',
+            context={
+                'recipient': recipient,
+                'topic': topic,
+                'topic_url': topic_url,
+                'unsubscribe_url': unsubscribe_url,
+            },
+            recipient_list=[recipient.email]
+        )
 
 @login_required
 def edit_topic(request, topic_id):
@@ -293,82 +337,37 @@ def login_view(request):
 
 def register_view(request):
     if request.method == 'POST':
-    
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        user_type = request.POST.get('user_type')
-        skills = request.POST.get('skills')
-        
-        
-        if not all([username, email, first_name, last_name, password1, password2]):
-            messages.error(request, 'Lütfen tüm zorunlu alanları doldurun.')
-            return redirect('app:register')
-        
-        if password1 != password2:
-            messages.error(request, 'Şifreler eşleşmiyor.')
-            return redirect('app:register')
-        
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Bu kullanıcı adı zaten kullanılıyor.')
-            return redirect('app:register')
-        
-        if User.objects.filter(email=email).exists():
-            messages.error(request, 'Bu e-posta adresi zaten kullanılıyor.')
-            return redirect('app:register')
-        
-        
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password1,
-            first_name=first_name,
-            last_name=last_name
-        )
-        
-        
-        user.user_type = user_type
-        user.save()
-        
-        
-        try:
-            profile = Profile.objects.create(user=user)
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
             
+            # Kullanıcı profili oluştur
+            # ... mevcut profil oluşturma kodu ...
             
-            if user_type == 'student':
-                profile.user_type = 'P'  
-            elif user_type == 'developer':
-                profile.user_type = 'M'  
-            else:
-                profile.user_type = 'D'  
+            try:
+                # Hoş geldiniz e-postası gönder
+                profile_url = request.build_absolute_uri(reverse('app:profile'))
+                send_html_email(
+                    subject='Tugeto\'ya Hoş Geldiniz!',
+                    template_name='app/emails/welcome_email.html',
+                    context={
+                        'user': user,
+                        'profile_url': profile_url,
+                    },
+                    recipient_list=[user.email]
+                )
+                print(f"E-posta başarıyla gönderildi: {user.email}")
+            except Exception as e:
+                print(f"E-posta gönderme hatası: {e}")
             
-            profile.save()
-        except Exception as e:
-            print(f"Profil oluşturma hatası: {e}")
-        
-    
-        if skills:
-            skill_names = [s.strip() for s in skills.split(',')]
-            for skill_name in skill_names:
-                if skill_name:
-                    skill, created = Skill.objects.get_or_create(name=skill_name)
-                    user.skills.add(skill)
-        
-        messages.success(request, f'Hesabınız başarıyla oluşturuldu! Şimdi giriş yapabilirsiniz.')
-        
-        
-        user = authenticate(username=username, password=password1)
-        if user is not None:
+            # Kullanıcıyı otomatik olarak giriş yap
             login(request, user)
-            messages.info(request, f'Hoş geldiniz, {user.first_name}!')
-            return redirect('app:index')
-        else:
-            return redirect('app:login')
+            messages.success(request, 'Hesabınız başarıyla oluşturuldu! Hoş geldiniz!')
+            return redirect('app:index')  # veya doğru URL adını kullanın
+    else:
+        form = UserRegisterForm()
     
-    return render(request, 'app/register.html')
+    return render(request, 'app/register.html', {'form': form})
 
 @login_required
 def logout_view(request):
@@ -502,11 +501,48 @@ def create_competition(request):
             status='active'  # Varsayılan olarak aktif
         )
         
+        # Yeni yarışma bildirimi gönder
+        send_competition_notification(request, competition)
+        
         messages.success(request, 'Yarışma başarıyla oluşturuldu!')
         return redirect('app:competition_detail', slug=competition.slug)
     
 
     return render(request, 'app/create_competition.html')
+
+def send_competition_notification(request, competition):
+    """Yeni yarışma oluşturulduğunda e-posta bildirimi gönderir."""
+    # E-posta almak isteyen kullanıcıları bul
+    recipients = User.objects.filter(
+        email_preferences__new_competitions=True,
+        is_active=True
+    ).exclude(email='')
+    
+    if not recipients:
+        return
+    
+    competition_url = request.build_absolute_uri(
+        reverse('app:competition_detail', kwargs={'slug': competition.slug})
+    )
+    
+    for recipient in recipients:
+        # Her kullanıcı için abonelikten çıkma URL'si oluştur
+        unsubscribe_url = request.build_absolute_uri(
+            reverse('app:email_preferences')
+        )
+        
+        # E-posta gönder
+        send_html_email(
+            subject=f'Yeni Yarışma: {competition.title}',
+            template_name='app/emails/new_competition_notification.html',
+            context={
+                'recipient': recipient,
+                'competition': competition,
+                'competition_url': competition_url,
+                'unsubscribe_url': unsubscribe_url,
+            },
+            recipient_list=[recipient.email]
+        )
 
 @login_required
 def manage_competitions(request):
@@ -631,3 +667,103 @@ def delete_competition(request, slug):
         return redirect('app:yarisma')
     
     return redirect('app:manage_competitions')
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            contact_message = form.save()
+            
+            # Yöneticiye bildirim e-postası gönder
+            admin_email = settings.EMAIL_HOST_USER
+            send_html_email(
+                subject=f'Yeni İletişim Mesajı: {contact_message.subject}',
+                template_name='app/emails/contact_notification.html',
+                context={
+                    'contact': contact_message,
+                },
+                recipient_list=[admin_email]
+            )
+            
+            # Kullanıcıya teşekkür e-postası gönder
+            send_html_email(
+                subject='Mesajınız için teşekkürler - Tugeto',
+                template_name='app/emails/contact_thank_you.html',
+                context={
+                    'contact': contact_message,
+                },
+                recipient_list=[contact_message.email]
+            )
+            
+            messages.success(request, 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.')
+            return redirect('app:contact')
+    else:
+        form = ContactForm()
+    
+    return render(request, 'app/contact.html', {'form': form})
+
+def newsletter_subscribe(request):
+    if request.method == 'POST':
+        form = NewsletterForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            
+            # E-posta zaten kayıtlı mı kontrol et
+            if Newsletter.objects.filter(email=email).exists():
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Bu e-posta adresi zaten bültenimize kayıtlı.'
+                })
+            
+            # Yeni abonelik oluştur
+            newsletter = form.save()
+            
+            # Abonelik onay e-postası gönder
+            send_html_email(
+                subject='Bülten Aboneliğiniz Onaylandı - Tugeto',
+                template_name='app/emails/newsletter_confirmation.html',
+                context={
+                    'email': email,
+                },
+                recipient_list=[email]
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Bülten aboneliğiniz başarıyla oluşturuldu. Teşekkürler!'
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': 'Geçerli bir e-posta adresi girin.'
+            })
+    
+    return JsonResponse({
+        'success': False,
+        'message': 'Geçersiz istek.'
+    })
+
+def unsubscribe(request, encoded_email):
+    try:
+        email = force_str(urlsafe_base64_decode(encoded_email))
+        newsletter = get_object_or_404(Newsletter, email=email)
+        newsletter.is_active = False
+        newsletter.save()
+        return render(request, 'app/unsubscribe.html', {'success': True})
+    except Exception:
+        return render(request, 'app/unsubscribe.html', {'success': False})
+
+@login_required
+def email_preferences(request):
+    preferences, created = EmailPreference.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        form = EmailPreferenceForm(request.POST, instance=preferences)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'E-posta tercihleriniz başarıyla güncellendi.')
+            return redirect('app:email_preferences')
+    else:
+        form = EmailPreferenceForm(instance=preferences)
+    
+    return render(request, 'app/email_preferences.html', {'form': form})

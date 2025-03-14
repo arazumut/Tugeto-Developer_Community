@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yeni Yarışma: {{ competition.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #4b6cb7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .competition-details {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4b6cb7;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            background-color: #f0f4ff;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        .stat-item:last-child {
+            margin-right: 0;
+        }
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4b6cb7;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Yeni Yarışma Duyurusu</h1>
+    </div>
+    <div class="content">
+        <p>Merhaba {{ recipient.username }},</p>
+        
+        <p>Tugeto platformunda yeni bir yarışma oluşturuldu! İşte detaylar:</p>
+        
+        <div class="competition-details">
+            <h2 style="color: #4b6cb7; margin-top: 0;">{{ competition.title }}</h2>
+            <p>{{ competition.description|truncatewords:50 }}</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">{{ competition.prize }} ₺</div>
+                    <div class="stat-label">Ödül</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ competition.max_participants }}</div>
+                    <div class="stat-label">Maks. Katılımcı</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ competition.level }}</div>
+                    <div class="stat-label">Seviye</div>
+                </div>
+            </div>
+            
+            <p><strong>Kategori:</strong> {{ competition.category }}</p>
+            <p><strong>Başlangıç:</strong> {{ competition.start_date|date:"d.m.Y" }}</p>
+            <p><strong>Bitiş:</strong> {{ competition.end_date|date:"d.m.Y" }}</p>
+            <p><strong>Son Kayıt:</strong> {{ competition.registration_deadline|date:"d.m.Y" }}</p>
+        </div>
+        
+        <p style="text-align: center;">
+            <a href="{{ competition_url }}" class="button">Yarışma Detaylarını Gör</a>
+        </p>
+        
+        <p>Bu yarışmaya katılmak ve yeteneklerinizi göstermek için son kayıt tarihinden önce kaydolmayı unutmayın!</p>
+        
+        <p>Saygılarımızla,<br>Tugeto Ekibi</p>
+    </div>
+    <div class="footer">
+        <p>Bu e-posta, Tugeto platformundaki etkinlikler hakkında sizi bilgilendirmek için gönderilmiştir.</p>
+        <p>E-posta bildirimlerini devre dışı bırakmak için <a href="{{ unsubscribe_url }}">tıklayın</a>.</p>
+        <p>&copy; 2024 Tugeto. Tüm hakları saklıdır.</p>
+    </div>
+</body>
+</html> 

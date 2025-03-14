@@ -10,7 +10,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from .models import User, Skill
+from .models import User, Skill, ContactMessage, Newsletter, EmailPreference
 
 class UserRegisterForm(UserCreationForm):
     """
@@ -95,4 +95,42 @@ class UserProfileForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             skills = self.instance.skills.all()
             if skills:
-                self.initial['skills'] = ', '.join([skill.name for skill in skills]) 
+                self.initial['skills'] = ', '.join([skill.name for skill in skills])
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'email', 'subject', 'message']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Adınız'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'E-posta Adresiniz'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Konu'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Mesajınız', 'rows': 5}),
+        }
+        labels = {
+            'name': 'Adınız',
+            'email': 'E-posta Adresiniz',
+            'subject': 'Konu',
+            'message': 'Mesajınız',
+        }
+
+class NewsletterForm(forms.ModelForm):
+    class Meta:
+        model = Newsletter
+        fields = ['email']
+        widgets = {
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'E-posta adresiniz'})
+        }
+        labels = {
+            'email': 'E-posta Adresiniz'
+        }
+
+class EmailPreferenceForm(forms.ModelForm):
+    class Meta:
+        model = EmailPreference
+        fields = ['new_competitions', 'new_forum_topics', 'newsletter']
+        widgets = {
+            'new_competitions': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'new_forum_topics': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'newsletter': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        } 

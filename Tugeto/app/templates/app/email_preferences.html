@@ -1,0 +1,65 @@
+{% extends 'app/base.html' %}
+
+{% block title %}E-posta Tercihleri - Tugeto{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-4">E-posta Bildirimleri</h1>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <p class="text-muted mb-4">Hangi konularda e-posta bildirimleri almak istediğinizi seçin.</p>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="list-group mb-4">
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    {{ form.new_competitions }}
+                                    <label class="form-check-label" for="{{ form.new_competitions.id_for_label }}">
+                                        <strong>Yeni Yarışmalar</strong>
+                                        <p class="text-muted mb-0 small">Yeni bir yarışma oluşturulduğunda bildirim alın.</p>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    {{ form.new_forum_topics }}
+                                    <label class="form-check-label" for="{{ form.new_forum_topics.id_for_label }}">
+                                        <strong>Yeni Forum Konuları</strong>
+                                        <p class="text-muted mb-0 small">Yeni bir forum konusu açıldığında bildirim alın.</p>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    {{ form.newsletter }}
+                                    <label class="form-check-label" for="{{ form.newsletter.id_for_label }}">
+                                        <strong>Bülten</strong>
+                                        <p class="text-muted mb-0 small">Bülten e-postaları alın.</p>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

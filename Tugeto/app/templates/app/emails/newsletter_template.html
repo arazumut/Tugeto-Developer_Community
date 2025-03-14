@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tugeto Bülteni</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #4b6cb7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4b6cb7;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .article {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+        .article:last-child {
+            border-bottom: none;
+        }
+        .article-title {
+            color: #4b6cb7;
+            margin-bottom: 10px;
+        }
+        .article-image {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Tugeto Bülteni</h1>
+        <p>{{ date|date:"F Y" }}</p>
+    </div>
+    <div class="content">
+        <p>Merhaba,</p>
+        
+        <p>Tugeto'dan son haberler ve güncellemeler:</p>
+        
+        <div class="article">
+            <h2 class="article-title">Yeni Özellik: E-posta Entegrasyonu</h2>
+            <img src="https://via.placeholder.com/600x300" alt="E-posta Entegrasyonu" class="article-image">
+            <p>Tugeto platformuna e-posta entegrasyonu ekledik. Artık iletişim formu, şifre sıfırlama, bülten aboneliği gibi özellikler e-posta ile destekleniyor.</p>
+            <p><a href="#" class="button">Detaylı Bilgi</a></p>
+        </div>
+        
+        <div class="article">
+            <h2 class="article-title">Yaklaşan Etkinlik: Yazılım Geliştirme Yarışması</h2>
+            <img src="https://via.placeholder.com/600x300" alt="Yazılım Yarışması" class="article-image">
+            <p>Önümüzdeki ay düzenlenecek olan yazılım geliştirme yarışmamıza katılmak için son başvuru tarihi yaklaşıyor. Hemen kaydolun ve ödülleri kazanma şansını yakalayın!</p>
+            <p><a href="#" class="button">Yarışma Detayları</a></p>
+        </div>
+        
+        <p>Tugeto'yu takip etmeye devam edin ve yeniliklerden haberdar olun.</p>
+        
+        <p>Saygılarımızla,<br>Tugeto Ekibi</p>
+    </div>
+    <div class="footer">
+        <p>Bu e-posta, Tugeto bültenine abone olduğunuz için gönderilmiştir.</p>
+        <p>Abonelikten çıkmak için <a href="{{ unsubscribe_url }}">tıklayın</a>.</p>
+        <p>&copy; 2024 Tugeto. Tüm hakları saklıdır.</p>
+    </div>
+</body>
+</html> 

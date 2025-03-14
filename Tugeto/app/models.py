@@ -20,6 +20,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from unidecode import unidecode
+from django.contrib.auth.models import User
 
 class User(AbstractUser):
     """
@@ -69,6 +70,14 @@ class Profile(models.Model):
     
     def __str__(self):
         return f"{self.user.username}'s profile"
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        
+        # Yeni profil oluşturulduğunda e-posta tercihlerini de oluştur
+        if is_new:
+            EmailPreference.objects.get_or_create(user=self.user)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -203,19 +212,19 @@ class Competition(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
     
     prize = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='competition_images/')
+    image = models.ImageField(upload_to='competitions/', null=True, blank=True)
     
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    registration_deadline = models.DateTimeField()
+    registration_deadline = models.DateTimeField(null=True, blank=True)
     
     max_participants = models.PositiveIntegerField()
     current_participants = models.PositiveIntegerField(default=0)
     
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
-    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='organized_competitions')
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='organized_competitions', null=True)
     participants = models.ManyToManyField(User, through='CompetitionParticipant', related_name='participated_competitions')
     
     def __str__(self):
@@ -344,3 +353,44 @@ class Message(models.Model):
     
     class Meta:
         ordering = ['-created_at']
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
+    
+    class Meta:
+        verbose_name = "İletişim Mesajı"
+        verbose_name_plural = "İletişim Mesajları"
+        ordering = ['-created_at']
+
+class Newsletter(models.Model):
+    email = models.EmailField(unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.email
+    
+    class Meta:
+        verbose_name = "Bülten Aboneliği"
+        verbose_name_plural = "Bülten Abonelikleri"
+        ordering = ['-created_at']
+
+class EmailPreference(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='email_preferences')
+    new_competitions = models.BooleanField(default=True, verbose_name="Yeni Yarışmalar")
+    new_forum_topics = models.BooleanField(default=True, verbose_name="Yeni Forum Konuları")
+    newsletter = models.BooleanField(default=True, verbose_name="Bülten")
+    
+    def __str__(self):
+        return f"{self.user.username} E-posta Tercihleri"
+    
+    class Meta:
+        verbose_name = "E-posta Tercihi"
+        verbose_name_plural = "E-posta Tercihleri"

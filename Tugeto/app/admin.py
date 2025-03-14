@@ -6,7 +6,8 @@ from django.contrib.auth.admin import UserAdmin
 from .models import (
     User, Skill, ForumCategory, ForumTopic, ForumComment,
     CompetitionCategory, Competition, CompetitionParticipant,
-    BlogPost, Tag, Notification, Message, CompetitionAnnouncement
+    BlogPost, Tag, Notification, Message, CompetitionAnnouncement,
+    ContactMessage, Newsletter, EmailPreference
 )
 
 class CustomUserAdmin(UserAdmin):
@@ -59,6 +60,48 @@ class MessageAdmin(admin.ModelAdmin):
     list_filter = ('is_read', 'created_at')
     search_fields = ('sender__username', 'receiver__username', 'content')
 
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('name', 'email', 'subject', 'message')
+    readonly_fields = ('created_at',)
+    date_hierarchy = 'created_at'
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('email', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('email',)
+    readonly_fields = ('created_at',)
+    actions = ['deactivate_subscriptions', 'activate_subscriptions']
+    
+    def deactivate_subscriptions(self, request, queryset):
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f'{updated} abonelik devre dışı bırakıldı.')
+    deactivate_subscriptions.short_description = "Seçili abonelikleri devre dışı bırak"
+    
+    def activate_subscriptions(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f'{updated} abonelik etkinleştirildi.')
+    activate_subscriptions.short_description = "Seçili abonelikleri etkinleştir"
+
+@admin.register(EmailPreference)
+class EmailPreferenceAdmin(admin.ModelAdmin):
+    list_display = ('user', 'new_competitions', 'new_forum_topics', 'newsletter')
+    list_filter = ('new_competitions', 'new_forum_topics', 'newsletter')
+    search_fields = ('user__username', 'user__email')
+    actions = ['enable_all', 'disable_all']
+    
+    def enable_all(self, request, queryset):
+        queryset.update(new_competitions=True, new_forum_topics=True, newsletter=True)
+        self.message_user(request, 'Seçili kullanıcılar için tüm e-posta bildirimleri etkinleştirildi.')
+    enable_all.short_description = "Tüm e-posta bildirimlerini etkinleştir"
+    
+    def disable_all(self, request, queryset):
+        queryset.update(new_competitions=False, new_forum_topics=False, newsletter=False)
+        self.message_user(request, 'Seçili kullanıcılar için tüm e-posta bildirimleri devre dışı bırakıldı.')
+    disable_all.short_description = "Tüm e-posta bildirimlerini devre dışı bırak"
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Skill)

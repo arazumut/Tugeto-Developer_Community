@@ -1,0 +1,36 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Abonelikten Çıkış - Tugeto{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4 text-center">
+                    {% if success %}
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle fa-3x text-success"></i>
+                    </div>
+                    <h1 class="h3 mb-3">Abonelikten Çıkış Tamamlandı</h1>
+                    <p class="text-muted mb-4">
+                        Bülten aboneliğiniz başarıyla iptal edildi. Artık e-posta almayacaksınız.
+                    </p>
+                    <p class="text-muted mb-4">
+                        Fikrinizi değiştirirseniz, istediğiniz zaman tekrar abone olabilirsiniz.
+                    </p>
+                    {% else %}
+                    <div class="mb-4">
+                        <i class="fas fa-exclamation-circle fa-3x text-warning"></i>
+                    </div>
+                    <h1 class="h3 mb-3">Abonelikten Çıkış Başarısız</h1>
+                    <p class="text-muted mb-4">
+                        Aboneliğinizi iptal ederken bir hata oluştu. Lütfen daha sonra tekrar deneyin veya bizimle iletişime geçin.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -2,13 +2,16 @@
 #Date : 13.03.2025 3.16am
 
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from . import views
-from . import auth_views
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 app_name = 'app'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('home/', views.index, name='home'),
     path('forum/', views.forum, name='forum'),
     path('forum/category/<slug:slug>/', views.forum_category, name='forum_category'),
     path('forum/topic/<int:topic_id>/', views.forum_topic, name='forum_topic'),
@@ -40,4 +43,33 @@ urlpatterns = [
     path('yarisma/yonetim/', views.manage_competitions, name='manage_competitions'),
     path('yarisma/duzenle/<slug:slug>/', views.edit_competition, name='edit_competition'),
     path('yarisma/sil/<slug:slug>/', views.delete_competition, name='delete_competition'),
+
+    # Şifre sıfırlama URL'leri
+    path('password-reset/', 
+         auth_views.PasswordResetView.as_view(
+             template_name='app/password_reset.html',
+             email_template_name='app/emails/password_reset_email.html',
+             subject_template_name='app/emails/password_reset_subject.txt',
+             success_url='/password-reset/done/'
+         ), 
+         name='password_reset'),
+    path('password-reset/done/', 
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='app/password_reset_done.html'
+         ), 
+         name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', 
+         auth_views.PasswordResetConfirmView.as_view(
+             template_name='app/password_reset_confirm.html',
+             success_url='/password-reset-complete/'
+         ), 
+         name='password_reset_confirm'),
+    path('password-reset-complete/', 
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='app/password_reset_complete.html'
+         ), 
+         name='password_reset_complete'),
+    path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter_subscribe'),
+    path('unsubscribe/<str:encoded_email>/', views.unsubscribe, name='unsubscribe'),
+    path('profile/email-preferences/', views.email_preferences, name='email_preferences'),
 ] 
