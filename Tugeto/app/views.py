@@ -27,15 +27,17 @@ def forum(request):
     }
     return render(request, 'app/forum.html', context)
 
-def forum_category(request, category_slug):
-    category = get_object_or_404(ForumCategory, slug=category_slug)
+def forum_category(request, slug):
+    category = get_object_or_404(ForumCategory, slug=slug)
+    topics = ForumTopic.objects.filter(category=category).order_by('-created_at')
+    
+    # Alt kategorileri al
     subcategories = ForumCategory.objects.filter(parent=category)
-    topics = ForumTopic.objects.filter(category=category).order_by('-is_pinned', '-created_at')
     
     context = {
         'category': category,
-        'subcategories': subcategories,
         'topics': topics,
+        'subcategories': subcategories,
     }
     return render(request, 'app/forum_category.html', context)
 
@@ -65,11 +67,10 @@ def forum_topic(request, topic_id):
     return render(request, 'app/forum_topic.html', context)
 
 @login_required
-def create_topic(request, category_slug=None):
-    if category_slug:
-        category = get_object_or_404(ForumCategory, slug=category_slug)
-    else:
-        category = None
+def create_topic(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Konu oluşturmak için giriş yapmalısınız.')
+        return redirect('app:login')
     
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -89,10 +90,11 @@ def create_topic(request, category_slug=None):
         else:
             messages.error(request, 'Lütfen tüm alanları doldurun.')
     
-    categories = ForumCategory.objects.all()
+    # Ana kategorileri ve alt kategorileri al
+    main_categories = ForumCategory.objects.filter(parent=None).prefetch_related('subcategories')
+    
     context = {
-        'categories': categories,
-        'selected_category': category,
+        'main_categories': main_categories,
     }
     return render(request, 'app/create_topic.html', context)
 

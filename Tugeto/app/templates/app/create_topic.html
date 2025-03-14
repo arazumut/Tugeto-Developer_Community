@@ -158,32 +158,20 @@ Date : 13.03.2025 ö3.08am
                 <small class="form-text">Açıklayıcı ve kısa bir başlık seçin (5-100 karakter).</small>
             </div>
             
-            <div class="form-group">
-                <label for="category" class="form-label">Kategori</label>
-                <select class="form-select form-control" id="category" name="category" required>
-                    <option value="" disabled {% if not selected_category %}selected{% endif %}>Kategori seçin</option>
+            <div class="form-group mb-3">
+                <label for="category" class="form-label">Kategori Seçin</label>
+                <select name="category" id="category" class="form-select" required>
+                    <option value="" disabled selected>Bir kategori seçin</option>
                     
-                    {% for category in categories %}
-                        {% if not category.parent %}
-                            <optgroup label="{{ category.name }}">
-                                <!-- Ana kategori olarak seçilebilir -->
-                                <option value="{{ category.id }}" {% if selected_category and selected_category.id == category.id %}selected{% endif %}>
-                                    {{ category.name }} (Genel)
-                                </option>
-                                
-                                <!-- Alt kategoriler -->
-                                {% for subcategory in categories %}
-                                    {% if subcategory.parent and subcategory.parent.id == category.id %}
-                                        <option value="{{ subcategory.id }}" {% if selected_category and selected_category.id == subcategory.id %}selected{% endif %}>
-                                            {{ subcategory.name }}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                            </optgroup>
-                        {% endif %}
+                    {% for main_category in main_categories %}
+                    <optgroup label="{{ main_category.name }}">
+                        {% for sub_category in main_category.subcategories.all %}
+                        <option value="{{ sub_category.id }}">{{ sub_category.name }}</option>
+                        {% endfor %}
+                    </optgroup>
                     {% endfor %}
                 </select>
-                <small class="form-text">Konunuzun içeriğine en uygun kategoriyi seçin. Ana kategoriler genel konular için, alt kategoriler daha spesifik konular içindir.</small>
+                <div class="form-text">Konunuzla en alakalı kategoriyi seçin.</div>
             </div>
             
             <div class="form-group">

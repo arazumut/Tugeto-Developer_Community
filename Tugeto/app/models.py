@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from unidecode import unidecode
 
 class User(AbstractUser):
     """
@@ -79,7 +80,7 @@ class ForumCategory(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(unidecode(self.name.lower()))
         super().save(*args, **kwargs)
     
     def __str__(self):
