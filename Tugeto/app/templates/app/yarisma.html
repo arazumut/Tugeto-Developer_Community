@@ -241,7 +241,6 @@ Date : 13.03.2025 ö3.08am
         </div>
     </section>
 
-    <!-- Yarışma Oluştur Butonu -->
     {% if user.is_authenticated and user.is_staff or user.user_type == 'company' %}
     <div class="text-end mb-4">
         <a href="{% url 'app:create_competition' %}" class="btn btn-primary">
@@ -250,11 +249,9 @@ Date : 13.03.2025 ö3.08am
     </div>
     {% endif %}
 
-    <!-- Aktif Yarışmalar -->
     <section class="py-4">
         <div class="container">
             <div class="row g-3">
-                <!-- Yarışma 1 -->
                 <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="card competition-card">
                         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -293,7 +290,6 @@ Date : 13.03.2025 ö3.08am
                     </div>
                 </div>
 
-                <!-- Yarışma 2 -->
                 <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="card competition-card">
                         <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
@@ -332,7 +328,6 @@ Date : 13.03.2025 ö3.08am
                     </div>
                 </div>
 
-                <!-- Yarışma 3 -->
                 <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="card competition-card">
                         <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
@@ -374,7 +369,6 @@ Date : 13.03.2025 ö3.08am
         </div>
     </section>
 
-    <!-- Yakında Başlayacak Yarışmalar -->
     <section class="upcoming-section">
         <div class="container">
             <div class="row mb-4">
@@ -383,7 +377,6 @@ Date : 13.03.2025 ö3.08am
                 </div>
             </div>
             <div class="row g-3">
-                <!-- Yakında Başlayacak Yarışma 1 -->
                 <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="card upcoming-card">
                         <div class="card-body p-4">
@@ -411,7 +404,6 @@ Date : 13.03.2025 ö3.08am
                     </div>
                 </div>
 
-                <!-- Yakında Başlayacak Yarışma 2 -->
                 <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
                     <div class="card upcoming-card">
                         <div class="card-body p-4">
@@ -442,7 +434,6 @@ Date : 13.03.2025 ö3.08am
         </div>
     </section>
 
-    <!-- Katılım Çağrısı -->
     <section class="py-4">
         <div class="container">
             <div class="row justify-content-center">

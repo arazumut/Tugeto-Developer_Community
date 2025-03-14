@@ -1,3 +1,17 @@
+#Author : K. Umut Araz
+#Date : 13.03.2025 3.13am
+
+#kullanıcı modeli
+#kullanıcı yetenekleri
+#kullanıcı yetenekleri ekleme
+#forum kategorileri
+#forum konuları
+#yarışma kategorileri
+#yarışmalar
+#yarışma katılımcıları
+#blog yazıları
+#etiketler
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
@@ -145,7 +159,7 @@ class CompetitionCategory(models.Model):
     """
     name = models.CharField(max_length=100)
     description = models.TextField()
-    icon = models.CharField(max_length=50, blank=True, null=True)  # Font Awesome icon class
+    icon = models.CharField(max_length=50, blank=True, null=True)  
     slug = models.SlugField(unique=True)
     
     def save(self, *args, **kwargs):

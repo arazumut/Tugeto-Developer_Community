@@ -59,7 +59,7 @@ class MessageAdmin(admin.ModelAdmin):
     list_filter = ('is_read', 'created_at')
     search_fields = ('sender__username', 'receiver__username', 'content')
 
-# Modelleri admin paneline kaydet
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Skill)
 admin.site.register(ForumCategory)

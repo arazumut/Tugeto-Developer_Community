@@ -1,6 +1,12 @@
 #Author : K. Umut Araz
 #Date : 13.03.2025 3.13am
 
+#kullanıcı kayıt
+#kullanıcı giriş
+#kullanıcı profil
+#kullanıcı yetenekleri
+#kullanıcı yetenekleri ekleme
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
@@ -32,7 +38,7 @@ class UserRegisterForm(UserCreationForm):
         self.fields['password1'].label = 'Şifre'
         self.fields['password2'].label = 'Şifre Onayı'
         
-        # Bootstrap sınıflarını ekle
+        
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 

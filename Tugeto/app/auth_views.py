@@ -29,7 +29,7 @@ class RegisterView(View):
         if form.is_valid():
             user = form.save()
             
-            # Kullanıcı tipini ve yetenekleri profil modeline kaydet
+            
             user_type = form.cleaned_data.get('user_type')
             if hasattr(user, 'profile'):
                 user.profile.user_type = user_type

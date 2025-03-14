@@ -43,7 +43,7 @@ Date : 13.03.2025 ö3.08am
         </div>
     </section>
 
-    <!-- Giriş Formu -->
+    
     <div class="auth-container">
         <div class="container">
             <div class="row justify-content-center">
@@ -70,13 +70,13 @@ Date : 13.03.2025 ö3.08am
                             <form action="{% url 'app:login' %}" method="POST">
                                 {% csrf_token %}
                                 
-                                <!-- Kullanıcı Adı -->
+                
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" id="id_username" name="username" placeholder="Kullanıcı Adı" required>
                                     <label for="id_username">Kullanıcı Adı</label>
                                 </div>
 
-                                <!-- Şifre -->
+                        
                                 <div class="form-floating mb-3">
                                     <input type="password" class="form-control" id="id_password" name="password" placeholder="Şifre" required>
                                     <label for="id_password">Şifre</label>
@@ -94,7 +94,7 @@ Date : 13.03.2025 ö3.08am
                                     <a href="#" class="text-decoration-none">Şifremi Unuttum</a>
                                 </div>
 
-                                <!-- Giriş Butonu -->
+                                
                                 <button type="submit" class="btn btn-auth btn-primary w-100 py-3 mb-3">
                                     <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
                                 </button>
@@ -106,7 +106,7 @@ Date : 13.03.2025 ö3.08am
                                 </div>
                             </form>
                             
-                            <!-- Sosyal Medya ile Giriş -->
+                            
                             <div class="social-login">
                                 <div class="social-login-divider">
                                     <span>veya şununla giriş yapın</span>

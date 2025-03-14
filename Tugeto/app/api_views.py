@@ -31,7 +31,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         
-        # Yazma izinleri sadece nesnenin sahibine verilir
+        
         if hasattr(obj, 'author'):
             return obj.author == request.user
         elif hasattr(obj, 'user'):
@@ -99,7 +99,7 @@ class ForumTopicViewSet(viewsets.ModelViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        # Görüntülenme sayısını artır
+    
         instance.views += 1
         instance.save()
         serializer = self.get_serializer(instance)
@@ -127,14 +127,14 @@ class ForumCommentViewSet(viewsets.ModelViewSet):
         comment = self.get_object()
         topic = comment.topic
         
-        # Sadece konu sahibi çözüm olarak işaretleyebilir
+        
         if request.user != topic.author:
             return Response({"detail": "Bu işlemi yapmaya yetkiniz yok."}, status=status.HTTP_403_FORBIDDEN)
         
-        # Diğer çözümleri kaldır
+        
         topic.comments.filter(is_solution=True).update(is_solution=False)
         
-        # Bu yorumu çözüm olarak işaretle
+        
         comment.is_solution = True
         comment.save()
         
@@ -172,19 +172,19 @@ class CompetitionViewSet(viewsets.ModelViewSet):
     def join(self, request, pk=None):
         competition = self.get_object()
         
-        # Kullanıcı zaten katılmış mı kontrol et
+
         if CompetitionParticipant.objects.filter(competition=competition, user=request.user).exists():
             return Response({"detail": "Bu yarışmaya zaten katıldınız."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Yarışma aktif mi kontrol et
+        
         if competition.status != 'active':
             return Response({"detail": "Bu yarışma şu anda aktif değil."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Maksimum katılımcı sayısı kontrol et
+        
         if competition.participants.count() >= competition.max_participants:
             return Response({"detail": "Bu yarışma maksimum katılımcı sayısına ulaştı."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Yarışmaya katıl
+
         participant = CompetitionParticipant.objects.create(competition=competition, user=request.user)
         serializer = CompetitionParticipantSerializer(participant)
         
@@ -194,17 +194,17 @@ class CompetitionViewSet(viewsets.ModelViewSet):
     def submit(self, request, pk=None):
         competition = self.get_object()
         
-        # Kullanıcı yarışmaya katılmış mı kontrol et
+        
         try:
             participant = CompetitionParticipant.objects.get(competition=competition, user=request.user)
         except CompetitionParticipant.DoesNotExist:
             return Response({"detail": "Bu yarışmaya katılmadınız."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Yarışma aktif mi kontrol et
+        
         if not competition.is_active:
             return Response({"detail": "Bu yarışma şu anda aktif değil."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Submission URL'i güncelle
+    
         submission_url = request.data.get('submission_url')
         if not submission_url:
             return Response({"detail": "Gönderim URL'i gereklidir."}, status=status.HTTP_400_BAD_REQUEST)
@@ -236,7 +236,7 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        # Yayınlanmamış gönderileri sadece yazarları görebilir
+        
         if not self.request.user.is_authenticated:
             queryset = queryset.filter(is_published=True)
         elif not self.request.user.is_staff:
@@ -248,7 +248,7 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        # Görüntülenme sayısını artır
+        
         instance.views += 1
         instance.save()
         serializer = self.get_serializer(instance)
@@ -306,15 +306,15 @@ class MessageViewSet(viewsets.ModelViewSet):
         """Kullanıcının tüm konuşmalarını listeler"""
         user = request.user
         
-        # Kullanıcının mesajlaştığı diğer kullanıcıları bul
+    
         sent_to = Message.objects.filter(sender=user).values_list('receiver', flat=True).distinct()
         received_from = Message.objects.filter(receiver=user).values_list('sender', flat=True).distinct()
         
-        # Tekrarlanan kullanıcıları kaldır
+    
         user_ids = set(list(sent_to) + list(received_from))
         users = User.objects.filter(id__in=user_ids)
         
-        # Her kullanıcı için son mesajı bul
+        
         conversations = []
         for other_user in users:
             last_message = Message.objects.filter(

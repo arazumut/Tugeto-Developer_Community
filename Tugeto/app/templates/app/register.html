@@ -28,7 +28,6 @@ Date : 13.03.2025 ö3.08am
 {% endblock %}
 
 {% block content %}
-    <!-- Hero Bölümü -->
     <section class="auth-hero">
         <div class="container">
             <div class="row align-items-center">
@@ -43,7 +42,6 @@ Date : 13.03.2025 ö3.08am
         </div>
     </section>
 
-    <!-- Kayıt Formu -->
     <div class="auth-container">
         <div class="container">
             <div class="row justify-content-center">
@@ -71,7 +69,6 @@ Date : 13.03.2025 ö3.08am
                                 {% csrf_token %}
                                 
                                 <div class="row">
-                                    <!-- Kullanıcı Adı -->
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" id="id_username" name="username" placeholder="Kullanıcı Adı" required>
@@ -79,7 +76,6 @@ Date : 13.03.2025 ö3.08am
                                         </div>
                                     </div>
                                     
-                                    <!-- E-posta -->
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating">
                                             <input type="email" class="form-control" id="id_email" name="email" placeholder="E-posta Adresi" required>
@@ -89,7 +85,6 @@ Date : 13.03.2025 ö3.08am
                                 </div>
 
                                 <div class="row">
-                                    <!-- Ad -->
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" id="id_first_name" name="first_name" placeholder="Ad" required>
@@ -97,7 +92,6 @@ Date : 13.03.2025 ö3.08am
                                         </div>
                                     </div>
                                     
-                                    <!-- Soyad -->
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating">
                                             <input type="text" class="form-control" id="id_last_name" name="last_name" placeholder="Soyad" required>
@@ -107,7 +101,6 @@ Date : 13.03.2025 ö3.08am
                                 </div>
 
                                 <div class="row">
-                                    <!-- Şifre -->
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating">
                                             <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Şifre" required>
@@ -118,7 +111,6 @@ Date : 13.03.2025 ö3.08am
                                         </div>
                                     </div>
                                     
-                                    <!-- Şifre Onayı -->
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating">
                                             <input type="password" class="form-control" id="id_password2" name="password2" placeholder="Şifre Onayı" required>
@@ -130,7 +122,6 @@ Date : 13.03.2025 ö3.08am
                                     </div>
                                 </div>
 
-                                <!-- Kullanıcı Tipi -->
                                 <div class="mb-4">
                                     <label class="form-label">Kullanıcı Tipi</label>
                                     <div class="user-type-container">
@@ -167,7 +158,6 @@ Date : 13.03.2025 ö3.08am
                                     </div>
                                 </div>
 
-                                <!-- Yetenekler -->
                                 <div class="mb-4" id="skills-container">
                                     <div class="form-floating">
                                         <input type="text" class="form-control" id="id_skills" name="skills" placeholder="Yetenekler">
@@ -176,7 +166,6 @@ Date : 13.03.2025 ö3.08am
                                     <small class="text-muted">Örnek: Python, JavaScript, Django, React...</small>
                                 </div>
 
-                                <!-- Şartlar ve Koşullar -->
                                 <div class="form-check mb-4">
                                     <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
                                     <label class="form-check-label" for="terms">
@@ -184,19 +173,16 @@ Date : 13.03.2025 ö3.08am
                                     </label>
                                 </div>
 
-                                <!-- Kayıt Ol Butonu -->
                                 <button type="submit" class="btn btn-auth btn-primary w-100 py-3 mb-3">
                                     <i class="fas fa-user-plus me-2"></i>Kayıt Ol
                                 </button>
 
-                                <!-- Giriş Yap Yönlendirme -->
                                 <div class="auth-links">
                                     <span class="text-muted">Zaten bir hesabınız var mı?</span>
                                     <a href="{% url 'app:login' %}" class="fw-bold">Giriş Yap</a>
                                 </div>
                             </form>
                             
-                            <!-- Sosyal Medya ile Kayıt -->
                             <div class="social-login">
                                 <div class="social-login-divider">
                                     <span>veya şununla kayıt olun</span>

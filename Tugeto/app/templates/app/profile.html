@@ -106,7 +106,6 @@ Date : 13.03.2025 ö3.08am
 {% endblock %}
 
 {% block content %}
-    <!-- Profil Başlık -->
     <section class="profile-header">
         <div class="container">
             <div class="row align-items-center">
@@ -137,7 +136,6 @@ Date : 13.03.2025 ö3.08am
         </div>
     </section>
 
-    <!-- Profil İstatistikleri -->
     <section class="profile-stats">
         <div class="container">
             <div class="row">
@@ -169,10 +167,8 @@ Date : 13.03.2025 ö3.08am
         </div>
     </section>
 
-    <!-- Profil İçeriği -->
     <section class="profile-content">
         <div class="container">
-            <!-- Profil Navigasyonu -->
             <ul class="nav nav-tabs profile-nav" id="profileTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">
@@ -196,13 +192,13 @@ Date : 13.03.2025 ö3.08am
                 </li>
             </ul>
 
-            <!-- Tab İçerikleri -->
+            
             <div class="tab-content" id="profileTabContent">
-                <!-- Genel Bakış -->
+                
                 <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
                     <div class="row mt-4">
                         <div class="col-lg-8">
-                            <!-- Hakkında -->
+                    
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Hakkında</h5>
@@ -212,7 +208,7 @@ Date : 13.03.2025 ö3.08am
                                 </div>
                             </div>
 
-                            <!-- Yetenekler -->
+                            
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h5 class="mb-0"><i class="fas fa-code me-2"></i>Yetenekler</h5>
@@ -228,7 +224,7 @@ Date : 13.03.2025 ö3.08am
                                 </div>
                             </div>
 
-                            <!-- Son Aktiviteler -->
+                            
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="mb-0"><i class="fas fa-history me-2"></i>Son Aktiviteler</h5>
@@ -262,7 +258,7 @@ Date : 13.03.2025 ö3.08am
                         </div>
 
                         <div class="col-lg-4">
-                            <!-- İletişim Bilgileri -->
+                            
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h5 class="mb-0"><i class="fas fa-address-card me-2"></i>İletişim</h5>
@@ -285,7 +281,7 @@ Date : 13.03.2025 ö3.08am
                                 </div>
                             </div>
 
-                            <!-- Sosyal Medya -->
+
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="mb-0"><i class="fas fa-share-alt me-2"></i>Sosyal Medya</h5>
@@ -308,7 +304,7 @@ Date : 13.03.2025 ö3.08am
                     </div>
                 </div>
 
-                <!-- Projeler -->
+
                 <div class="tab-pane fade" id="projects" role="tabpanel" aria-labelledby="projects-tab">
                     <div class="row mt-4">
                         <div class="col-md-6 col-lg-4 mb-4">
@@ -376,7 +372,6 @@ Date : 13.03.2025 ö3.08am
                     </div>
                 </div>
 
-                <!-- Forum Gönderileri -->
                 <div class="tab-pane fade" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                     <div class="mt-4">
                         <div class="card mb-4">
@@ -492,7 +487,7 @@ Date : 13.03.2025 ö3.08am
                                             <textarea name="bio" class="form-control" rows="4">{{ user.profile.bio }}</textarea>
                                         </div>
                                         
-                                        <!-- Sosyal Medya Bağlantıları -->
+                                    
                                         <div class="mb-3">
                                             <label class="form-label">GitHub URL</label>
                                             <input type="url" name="github_url" class="form-control" value="{{ user.profile.github_url }}">
@@ -516,7 +511,7 @@ Date : 13.03.2025 ö3.08am
                             </div>
                         </div>
                         
-                        <!-- Şifre Değiştirme -->
+                    
                         <div class="col-lg-4">
                             <div class="card">
                                 <div class="card-header">

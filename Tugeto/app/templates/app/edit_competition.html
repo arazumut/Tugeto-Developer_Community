@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Başlık -->
+    
     <section class="edit-competition-header">
         <div class="container">
             <div class="row align-items-center">
@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <!-- Form -->
+    
     <section class="py-5">
         <div class="container">
             <div class="row justify-content-center">
@@ -39,7 +39,7 @@
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 
-                                <!-- Temel Bilgiler -->
+                                
                                 <h4 class="mb-4">Temel Bilgiler</h4>
                                 <div class="mb-4">
                                     <label class="form-label">Yarışma Başlığı</label>
@@ -75,7 +75,7 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Ödül ve Katılımcı Bilgileri -->
+                                
                                 <h4 class="mb-4">Ödül ve Katılımcı Bilgileri</h4>
                                 <div class="row mb-4">
                                     <div class="col-md-6">
@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Tarih Bilgileri -->
+                                
                                 <h4 class="mb-4">Tarih Bilgileri</h4>
                                 <div class="row mb-4">
                                     <div class="col-md-4">
@@ -105,7 +105,7 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Görsel -->
+                            
                                 <h4 class="mb-4">Yarışma Görseli</h4>
                                 <div class="mb-4">
                                     <div class="mb-3">
@@ -118,7 +118,7 @@
                                     <small class="text-muted">Yeni bir görsel yüklemek isterseniz seçin, aksi halde mevcut görsel kullanılacaktır.</small>
                                 </div>
                                 
-                                <!-- Gönder Butonu -->
+                            
                                 <div class="text-end">
                                     <a href="{% url 'app:competition_detail' competition.slug %}" class="btn btn-secondary me-2">
                                         <i class="fas fa-times me-2"></i>İptal

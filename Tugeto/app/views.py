@@ -31,7 +31,7 @@ def forum_category(request, slug):
     category = get_object_or_404(ForumCategory, slug=slug)
     topics = ForumTopic.objects.filter(category=category).order_by('-created_at')
     
-    # Alt kategorileri al
+    
     subcategories = ForumCategory.objects.filter(parent=category)
     
     context = {
@@ -45,7 +45,7 @@ def forum_topic(request, topic_id):
     topic = get_object_or_404(ForumTopic, id=topic_id)
     comments = topic.comments.all()
     
-    # Görüntülenme sayısını artır
+    
     topic.views += 1
     topic.save()
     
@@ -90,7 +90,7 @@ def create_topic(request):
         else:
             messages.error(request, 'Lütfen tüm alanları doldurun.')
     
-    # Ana kategorileri ve alt kategorileri al
+
     main_categories = ForumCategory.objects.filter(parent=None).prefetch_related('subcategories')
     
     context = {
@@ -102,7 +102,7 @@ def create_topic(request):
 def edit_topic(request, topic_id):
     topic = get_object_or_404(ForumTopic, id=topic_id)
     
-    # Sadece konu sahibi veya admin düzenleyebilir
+    
     if request.user != topic.author and not request.user.is_staff:
         messages.error(request, 'Bu konuyu düzenleme yetkiniz yok.')
         return redirect('app:forum_topic', topic_id=topic.id)
@@ -134,7 +134,7 @@ def edit_topic(request, topic_id):
 def delete_topic(request, topic_id):
     topic = get_object_or_404(ForumTopic, id=topic_id)
     
-    # Sadece konu sahibi veya admin silebilir
+
     if request.user != topic.author and not request.user.is_staff:
         messages.error(request, 'Bu konuyu silme yetkiniz yok.')
         return redirect('app:forum_topic', topic_id=topic.id)
@@ -154,7 +154,7 @@ def delete_topic(request, topic_id):
 def edit_comment(request, comment_id):
     comment = get_object_or_404(ForumComment, id=comment_id)
     
-    # Sadece yorum sahibi veya admin düzenleyebilir
+
     if request.user != comment.author and not request.user.is_staff:
         messages.error(request, 'Bu yorumu düzenleme yetkiniz yok.')
         return redirect('app:forum_topic', topic_id=comment.topic.id)
@@ -179,7 +179,7 @@ def edit_comment(request, comment_id):
 def delete_comment(request, comment_id):
     comment = get_object_or_404(ForumComment, id=comment_id)
     
-    # Sadece yorum sahibi veya admin silebilir
+    
     if request.user != comment.author and not request.user.is_staff:
         messages.error(request, 'Bu yorumu silme yetkiniz yok.')
         return redirect('app:forum_topic', topic_id=comment.topic.id)
@@ -200,15 +200,15 @@ def mark_solution(request, comment_id):
     comment = get_object_or_404(ForumComment, id=comment_id)
     topic = comment.topic
     
-    # Sadece konu sahibi veya admin çözüm olarak işaretleyebilir
+
     if request.user != topic.author and not request.user.is_staff:
         messages.error(request, 'Bu yorumu çözüm olarak işaretleme yetkiniz yok.')
         return redirect('app:forum_topic', topic_id=topic.id)
     
-    # Diğer çözümleri kaldır
+    
     topic.comments.filter(is_solution=True).update(is_solution=False)
     
-    # Bu yorumu çözüm olarak işaretle
+    
     comment.is_solution = True
     comment.save()
     
@@ -238,15 +238,15 @@ def search_forum(request):
     return render(request, 'app/search_results.html', context)
 
 def yarisma(request):
-    # Filtreleme parametrelerini al
+    
     category = request.GET.get('category')
     level = request.GET.get('level')
-    status = request.GET.get('status', 'active')  # Varsayılan olarak aktif yarışmaları göster
+    status = request.GET.get('status', 'active')  
     
-    # Temel sorgu
+    
     competitions = Competition.objects.all()
     
-    # Filtreleri uygula
+    
     if category and category != 'all':
         competitions = competitions.filter(category=category)
     if level and level != 'all':
@@ -293,7 +293,7 @@ def login_view(request):
 
 def register_view(request):
     if request.method == 'POST':
-        # Form verilerini manuel olarak işleyelim
+    
         username = request.POST.get('username')
         email = request.POST.get('email')
         first_name = request.POST.get('first_name')
@@ -303,7 +303,7 @@ def register_view(request):
         user_type = request.POST.get('user_type')
         skills = request.POST.get('skills')
         
-        # Basit doğrulama
+        
         if not all([username, email, first_name, last_name, password1, password2]):
             messages.error(request, 'Lütfen tüm zorunlu alanları doldurun.')
             return redirect('app:register')
@@ -320,7 +320,7 @@ def register_view(request):
             messages.error(request, 'Bu e-posta adresi zaten kullanılıyor.')
             return redirect('app:register')
         
-        # Kullanıcıyı oluştur
+        
         user = User.objects.create_user(
             username=username,
             email=email,
@@ -329,27 +329,27 @@ def register_view(request):
             last_name=last_name
         )
         
-        # Kullanıcı tipini ayarla
+        
         user.user_type = user_type
         user.save()
         
-        # Profil oluştur
+        
         try:
             profile = Profile.objects.create(user=user)
             
-            # Kullanıcı tipini profile'a da yansıt
+            
             if user_type == 'student':
-                profile.user_type = 'P'  # Programcı
+                profile.user_type = 'P'  
             elif user_type == 'developer':
-                profile.user_type = 'M'  # Mühendis
+                profile.user_type = 'M'  
             else:
-                profile.user_type = 'D'  # Diğer (şirket veya eğitmen)
+                profile.user_type = 'D'  
             
             profile.save()
         except Exception as e:
             print(f"Profil oluşturma hatası: {e}")
         
-        # Yetenekleri ekle
+    
         if skills:
             skill_names = [s.strip() for s in skills.split(',')]
             for skill_name in skill_names:
@@ -359,7 +359,7 @@ def register_view(request):
         
         messages.success(request, f'Hesabınız başarıyla oluşturuldu! Şimdi giriş yapabilirsiniz.')
         
-        # Otomatik giriş yap
+        
         user = authenticate(username=username, password=password1)
         if user is not None:
             login(request, user)
@@ -419,7 +419,7 @@ def terms(request):
 @login_required
 def update_profile(request):
     if request.method == 'POST':
-        # Profil bilgilerini güncelle
+        
         user = request.user
         user.first_name = request.POST.get('first_name')
         user.last_name = request.POST.get('last_name')
@@ -429,7 +429,7 @@ def update_profile(request):
         user.profile.linkedin_url = request.POST.get('linkedin_url')
         user.profile.website_url = request.POST.get('website_url')
         
-        # Profil fotoğrafını güncelle
+        
         if 'avatar' in request.FILES:
             user.profile.avatar = request.FILES['avatar']
         
@@ -448,7 +448,7 @@ def change_password(request):
         new_password1 = request.POST.get('new_password1')
         new_password2 = request.POST.get('new_password2')
         
-        # Şifre kontrolü
+
         if not request.user.check_password(current_password):
             messages.error(request, 'Mevcut şifreniz yanlış.')
             return redirect('app:profile')
@@ -486,7 +486,7 @@ def create_competition(request):
         registration_deadline = request.POST.get('registration_deadline')
         image = request.FILES.get('image')
         
-        # Yarışmayı oluştur
+        
         competition = Competition.objects.create(
             title=title,
             description=description,
@@ -505,7 +505,7 @@ def create_competition(request):
         messages.success(request, 'Yarışma başarıyla oluşturuldu!')
         return redirect('app:competition_detail', slug=competition.slug)
     
-    # GET isteği için şablonu render et
+
     return render(request, 'app/create_competition.html')
 
 @login_required
@@ -514,7 +514,7 @@ def manage_competitions(request):
         messages.error(request, 'Bu sayfaya erişim yetkiniz bulunmamaktadır.')
         return redirect('app:yarisma')
     
-    # Şirket kullanıcıları sadece kendi yarışmalarını görebilir
+    
     if request.user.user_type == 'company':
         competitions = Competition.objects.filter(organizer=request.user)
     # Admin kullanıcıları tüm yarışmaları görebilir
@@ -538,7 +538,7 @@ def competition_detail(request, slug):
     
     if request.method == 'POST' and request.user.is_authenticated:
         if 'join' in request.POST:
-            # Yarışmaya katılma işlemi
+
             if competition.current_participants < competition.max_participants:
                 CompetitionParticipant.objects.create(
                     competition=competition,
@@ -574,13 +574,13 @@ def competition_detail(request, slug):
 def edit_competition(request, slug):
     competition = get_object_or_404(Competition, slug=slug)
     
-    # Yetki kontrolü - sadece organizatör veya admin düzenleyebilir
+    
     if request.user != competition.organizer and not request.user.is_staff:
         messages.error(request, 'Bu yarışmayı düzenleme yetkiniz bulunmamaktadır.')
         return redirect('app:competition_detail', slug=slug)
     
     if request.method == 'POST':
-        # Form verilerini al
+    
         title = request.POST.get('title')
         description = request.POST.get('description')
         category = request.POST.get('category')
@@ -591,7 +591,7 @@ def edit_competition(request, slug):
         end_date = request.POST.get('end_date')
         registration_deadline = request.POST.get('registration_deadline')
         
-        # Yarışmayı güncelle
+        
         competition.title = title
         competition.description = description
         competition.category = category
@@ -602,7 +602,7 @@ def edit_competition(request, slug):
         competition.end_date = end_date
         competition.registration_deadline = registration_deadline
         
-        # Eğer yeni bir resim yüklendiyse
+        
         if 'image' in request.FILES:
             competition.image = request.FILES['image']
         

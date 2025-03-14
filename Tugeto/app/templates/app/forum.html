@@ -275,7 +275,7 @@ Date : 13.03.2025 ö3.08am
                         </div>
                     </div>
                     
-                    <!-- Alt kategoriler -->
+                    
                     {% if category.subcategories.all %}
                     <div class="subcategories mt-3">
                         <div class="subcategory-list">
@@ -388,7 +388,7 @@ Date : 13.03.2025 ö3.08am
 
 {% block extra_js %}
 <script>
-    // Tooltip'leri etkinleştir
+    
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
