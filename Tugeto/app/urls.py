@@ -44,7 +44,7 @@ urlpatterns = [
     path('yarisma/duzenle/<slug:slug>/', views.edit_competition, name='edit_competition'),
     path('yarisma/sil/<slug:slug>/', views.delete_competition, name='delete_competition'),
 
-    # Şifre sıfırlama URL'leri
+    
     path('password-reset/', 
          auth_views.PasswordResetView.as_view(
              template_name='app/password_reset.html',

@@ -187,11 +187,12 @@ LOGOUT_REDIRECT_URL = '/'
 
 # E-posta Ayarları
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Test için konsola yazdırma test için backend i değiştir unutma
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'arazumut349@gmail.com'  # Gerçek Gmail adresinizi girin
-EMAIL_HOST_PASSWORD = 'qukd tfrb'#burayı düzenle şifreyi kıstım yanlış o şifre 
-DEFAULT_FROM_EMAIL = 'Tugeto <arazumut349@gmail.com>'  # E-posta adresinizi kullanın
+EMAIL_HOST_PASSWORD = 'qukdtfrbagybysga'#burayı düzenle şifreyi kıstım yanlış o şifre 
+DEFAULT_FROM_EMAIL = 'Tugeto <arazumut349@gmail.com>'
 
 

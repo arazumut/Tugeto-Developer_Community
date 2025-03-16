@@ -344,21 +344,28 @@ def register_view(request):
             # Kullanıcı profili oluştur
             # ... mevcut profil oluşturma kodu ...
             
-            try:
-                # Hoş geldiniz e-postası gönder
-                profile_url = request.build_absolute_uri(reverse('app:profile'))
-                send_html_email(
-                    subject='Tugeto\'ya Hoş Geldiniz!',
-                    template_name='app/emails/welcome_email.html',
-                    context={
-                        'user': user,
-                        'profile_url': profile_url,
-                    },
-                    recipient_list=[user.email]
-                )
-                print(f"E-posta başarıyla gönderildi: {user.email}")
-            except Exception as e:
-                print(f"E-posta gönderme hatası: {e}")
+            # Kullanıcının e-posta adresi olduğundan emin olun
+            if user.email:
+                try:
+                    # Hoş geldiniz e-postası gönder
+                    profile_url = request.build_absolute_uri(reverse('app:profile'))
+                    result = send_html_email(
+                        subject='Tugeto\'ya Hoş Geldiniz!',
+                        template_name='app/emails/welcome_email.html',
+                        context={
+                            'user': user,
+                            'profile_url': profile_url,
+                        },
+                        recipient_list=[user.email]
+                    )
+                    if result:
+                        print(f"E-posta başarıyla gönderildi: {user.email}")
+                    else:
+                        print(f"E-posta gönderilemedi: {user.email}")
+                except Exception as e:
+                    print(f"E-posta gönderme hatası: {e}")
+            else:
+                print(f"Kullanıcının e-posta adresi yok: {user.username}")
             
             # Kullanıcıyı otomatik olarak giriş yap
             login(request, user)
